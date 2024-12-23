@@ -57,10 +57,6 @@
                                               <span class="text-info">{{ $data->given_installment }} @lang('Given')</span>
                                               </div>
                                           </td>
-
-                                          <td data-label="{{ __('Next Installment') }}"> 
-                                            {{ $data->next_installment ?  $data->next_installment->toDateString() : '--'}}
-                                          </td>
                                           <td data-label="{{ __('Status') }}">
                                             @if ($data->status == 0)
                                               <span class="badge bg-warning">@lang('Pending')</span>
