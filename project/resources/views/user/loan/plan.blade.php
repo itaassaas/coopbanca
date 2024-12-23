@@ -94,7 +94,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{('Apply for Loan')}}</h5>
+          <h5 class="modal-title">{{('Solicitar préstamo')}}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
@@ -103,7 +103,9 @@
             <div class="modal-body">
               <div class="form-group">
                 <label class="form-label required">{{__('Amount')}}</label>
-                <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" value="{{ old('amount') }}" min="1" required>
+<!-- HTML Input -->
+<input name="amount" id="amount" class="form-control" autocomplete="off" 
+    placeholder="{{__('0.00')}}" type="text" value="{{ old('amount') }}" required>
               </div>
     
               <input type="hidden" name="planId" id="planId" value="">
@@ -119,7 +121,36 @@
 @endsection
 
 @push('js')
+<script>
+document.getElementById('amount').addEventListener('input', function(e) {
+    // Get input value and remove non-digits
+    let value = this.value.replace(/[^\d.]/g, '');
+    
+    // Ensure only one decimal point
+    value = value.replace(/(\..*)\./g, '$1');
+    
+    // Format with commas and 2 decimal places
+    if (value) {
+        let number = parseFloat(value);
+        if (!isNaN(number)) {
+            this.value = number.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+    }
+});
 
+// Add hidden input to store actual numeric value for form submission
+document.querySelector('form').addEventListener('submit', function(e) {
+    let amount = document.getElementById('amount').value.replace(/,/g, '');
+    let hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'amount_value';
+    hiddenInput.value = amount;
+    this.appendChild(hiddenInput);
+});
+</script>
 <script>
     'use strict';
     
