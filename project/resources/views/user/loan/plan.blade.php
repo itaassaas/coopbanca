@@ -121,35 +121,34 @@
 @endsection
 
 @push('js')
+
+
 <script>
 document.getElementById('amount').addEventListener('input', function(e) {
-    // Store cursor position
-    const start = this.selectionStart;
-    const end = this.selectionEnd;
-    const initialLength = this.value.length;
-
-    // Remove existing formatting
+    // Get current cursor position
+    const cursorPos = this.selectionStart;
+    
+    // Get input value without commas
     let value = this.value.replace(/,/g, '');
     
-    // Only process if there's a value and it's a number
     if (value) {
-        // Ensure valid decimal number
-        value = value.replace(/[^\d.]/g, '');
-        value = value.replace(/(\..*)\./g, '$1');
+        // Format number but preserve cursor
+        const parts = value.split('.');
+        const wholePart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        const decimalPart = parts[1] ? '.' + parts[1].slice(0, 2) : '';
         
-        const number = parseFloat(value);
-        if (!isNaN(number)) {
-            // Format number
-            this.value = number.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-
-            // Adjust cursor position
-            const addedChars = this.value.length - initialLength;
-            const newPos = start + addedChars;
-            this.setSelectionRange(newPos, newPos);
-        }
+        // Update value
+        this.value = wholePart + decimalPart;
+        
+        // Count commas before cursor
+        const commasBeforeCursor = (this.value.slice(0, cursorPos).match(/,/g) || []).length;
+        const originalCommas = (value.slice(0, cursorPos).match(/,/g) || []).length;
+        
+        // Restore cursor position
+        this.setSelectionRange(
+            cursorPos + (commasBeforeCursor - originalCommas),
+            cursorPos + (commasBeforeCursor - originalCommas)
+        );
     }
 });
 
@@ -163,6 +162,8 @@ document.querySelector('form').addEventListener('submit', function(e) {
     this.appendChild(hiddenInput);
 });
 </script>
+
+
 <script>
     'use strict';
     
