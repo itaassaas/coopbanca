@@ -51,9 +51,9 @@
                                           <td data-label="{{ __('Loan Amount') }}">{{ showprice($data->loan_amount,$currency) }}</td>
                                           <td data-label="{{ __('Per Installment') }}">{{ showprice($data->per_installment_amount,$currency) }}</td>
                                           <td data-label="{{ __('Total Installement') }}">
-                                              <div>
-                                                  {{ $data->total_installment}}
-                                              <br>
+                                          <td data-label="{{ __('Next Installment') }}">
+                                              {{ $data->next_installment ? \Carbon\Carbon::parse($data->next_installment)->toDateString() : '--' }}
+                                          </td>
                                               <span class="text-info">{{ $data->given_installment }} @lang('Given')</span>
                                               </div>
                                           </td>
