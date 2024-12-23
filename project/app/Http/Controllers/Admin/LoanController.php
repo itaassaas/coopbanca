@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Models\UserLoan;
 use Illuminate\Http\Request;
 use Datatables;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 
 class LoanController extends Controller
 {
@@ -69,8 +69,8 @@ class LoanController extends Controller
                             })
 
                             ->editColumn('next_installment', function(UserLoan $data){
-                              return $data->next_installment ? $data->next_installment->toDateString() : '--';
-                            })
+                              return $data->next_installment ? Carbon::parse($data->next_installment)->toDateString() : '--';
+                          })
 
                             ->addColumn('status', function(UserLoan $data) {
 
