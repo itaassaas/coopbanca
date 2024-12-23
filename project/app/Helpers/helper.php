@@ -11,6 +11,9 @@ use App\Models\Generalsetting;
         $gs = Generalsetting::first();
         
         $price = round(($price) * $currency->value,2);
+         // Format number with thousand separator and 2 decimal places
+         $formatted_price = number_format($price, 2, '.', ',');
+        
         if($gs->currency_format == 0){
             return $currency->sign. $price;
         }
