@@ -103,9 +103,7 @@
             <div class="modal-body">
               <div class="form-group">
                 <label class="form-label required">{{__('Amount')}}</label>
-<!-- HTML Input -->
-<input name="amount" id="amount" class="form-control" autocomplete="off" 
-    placeholder="{{__('0.00')}}" type="text" value="{{ old('amount') }}" required>
+                <input name="amount" id="amount" class="form-control" autocomplete="off" placeholder="{{__('0.0')}}" type="number" value="{{ old('amount') }}" min="1" required>
               </div>
     
               <input type="hidden" name="planId" id="planId" value="">
@@ -121,48 +119,6 @@
 @endsection
 
 @push('js')
-
-
-<script>
-document.getElementById('amount').addEventListener('input', function(e) {
-    // Get current cursor position
-    const cursorPos = this.selectionStart;
-    
-    // Get input value without commas
-    let value = this.value.replace(/,/g, '');
-    
-    if (value) {
-        // Format number but preserve cursor
-        const parts = value.split('.');
-        const wholePart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        const decimalPart = parts[1] ? '.' + parts[1].slice(0, 2) : '';
-        
-        // Update value
-        this.value = wholePart + decimalPart;
-        
-        // Count commas before cursor
-        const commasBeforeCursor = (this.value.slice(0, cursorPos).match(/,/g) || []).length;
-        const originalCommas = (value.slice(0, cursorPos).match(/,/g) || []).length;
-        
-        // Restore cursor position
-        this.setSelectionRange(
-            cursorPos + (commasBeforeCursor - originalCommas),
-            cursorPos + (commasBeforeCursor - originalCommas)
-        );
-    }
-});
-
-// Handle form submission
-document.querySelector('form').addEventListener('submit', function(e) {
-    const amount = document.getElementById('amount').value.replace(/,/g, '');
-    const hiddenInput = document.createElement('input');
-    hiddenInput.type = 'hidden';
-    hiddenInput.name = 'amount_value';
-    hiddenInput.value = amount;
-    this.appendChild(hiddenInput);
-});
-</script>
-
 
 <script>
     'use strict';
