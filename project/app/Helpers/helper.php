@@ -15,10 +15,10 @@ use App\Models\Generalsetting;
          $formatted_price = number_format($price, 2, '.', ',');
         
         if($gs->currency_format == 0){
-            return $currency->sign. $price;
+          return $currency->sign . $formatted_price;
         }
         else{
-            return $price. $currency->sign;
+          return $formatted_price . $currency->sign;
         }
     }
   }
