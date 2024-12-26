@@ -9,7 +9,7 @@
                 </div>
                 <div class="footer-logo">
                     <a href="index.html">
-                        <img src= "https://listindiario.com/files/main_image/uploads/2020/01/23/643181bbad390.jpeg" alt="logo">
+                        <img src= "https://popularenlinea.com/_catalogs/masterpage/popularenlinea/shared/images/BPD-logo.png" alt="logo">
                     </a>
                 </div>
                 <div class="footer-links">
