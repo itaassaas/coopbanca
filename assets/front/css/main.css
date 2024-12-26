@@ -1279,7 +1279,7 @@ div[class*="col"]:nth-of-type(4n + 4) .feature-item:hover .feature-item__icon {
 }
 
 .hero-section {
-	padding: 90px 0 90px;
+	padding: 20px;
 }
 
 .hero-content {
