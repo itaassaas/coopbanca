@@ -12,6 +12,12 @@
                     <a href="index.html">
                         <img src= "https://popularenlinea.com/_catalogs/masterpage/popularenlinea/shared/images/BPD-logo.png" alt="logo">
                     </a>
+                    <a href="index.html">
+                        <img src= "https://acceso.rexi.do/media/2222738/logos-br-rgb_2.png" alt="logo">
+                    </a>
+                    <a href="index.html">
+                        <img src= "https://acceso.rexi.do/media/2222154/bhd_fondos_firma_fnd-blanco.png" alt="logo">
+                    </a>
                 </div>
                 <div class="footer-links">
                     <h5 class="title">@lang('About')</h5>
