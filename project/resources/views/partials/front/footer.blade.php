@@ -7,6 +7,11 @@
                         <img src="{{ asset('assets/images/'.$gs->footer_logo) }}" alt="logo">
                     </a>
                 </div>
+                <div class="footer-logo">
+                    <a href="index.html">
+                        <img src= "https://listindiario.com/files/main_image/uploads/2020/01/23/643181bbad390.jpeg" alt="logo">
+                    </a>
+                </div>
                 <div class="footer-links">
                     <h5 class="title">@lang('About')</h5>
                     <ul>
