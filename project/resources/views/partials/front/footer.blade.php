@@ -8,6 +8,7 @@
                     </a>
                 </div>
                 <div class="footer-logo">
+                <h5 class="title">con el apoyo de:</h5>
                     <a href="index.html">
                         <img src= "https://popularenlinea.com/_catalogs/masterpage/popularenlinea/shared/images/BPD-logo.png" alt="logo">
                     </a>
