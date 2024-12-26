@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <!-- Hero 
+    <!-- Hero -->
     <section class="hero-section bg--overlay bg_img" data-img="{{ asset('assets/images/'.$gs->breadcumb_banner) }}">
         <div class="container">
             <div class="hero-content">
@@ -21,7 +21,7 @@
             </div>
         </div>
     </section>
-    <-- Hero -->
+    <!-- Hero -->
 
     <!-- Account -->
     <section class="account-section pt-100 pb-100">
