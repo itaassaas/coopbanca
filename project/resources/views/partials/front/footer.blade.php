@@ -8,7 +8,7 @@
                     </a>
                 </div>
                 <div class="footer-links">
-                    <h5 class="title">@lang('Acerca de')</h5>
+                    <h5 class="title">@lang('About')</h5>
                     <ul>
                         @foreach(DB::table('pages')->whereStatus(1)->orderBy('id','desc')->get() as $data)
                             <li>
