@@ -7,6 +7,8 @@
     background: linear-gradient(45deg, #2196F3, #1976D2);
     color: white;
     border: none;
+    margin-bottom: 20px;
+    padding: 15px;
 }
 .fa-share-square, .fa-plus-square, .fa-ellipsis-v {
     color: #FFD700;
