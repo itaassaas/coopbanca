@@ -227,15 +227,47 @@ class UserController extends Controller
 
     public function reject($id)
     {
-        $withdraw = Withdraw::findOrFail($id);
-        $account = User::findOrFail($withdraw->user->id);
-        $account->balance = $account->balance + $withdraw->amount + $withdraw->fee;
-        $account->update();
-        $data['status'] = "rejected";
-        $withdraw->update($data);
-
-        $msg = __('Withdraw Rejected Successfully.');
-        return response()->json($msg);
+        try {
+            \DB::beginTransaction();
+    
+            $withdraw = Withdraw::findOrFail($id);
+            $account = User::findOrFail($withdraw->user->id);
+    
+            // Actualizar balance del usuario
+            $account->balance = $account->balance + $withdraw->amount + $withdraw->fee;
+            $account->update();
+    
+            // Actualizar retiro con motivo
+            $withdraw->update([
+                'status' => "rejected",
+                'motivo_rechazo' => request('motivo_rechazo')
+            ]);
+    
+            // Registrar transacción
+            Transaction::create([
+                'user_id' => $account->id,
+                'amount' => $withdraw->amount,
+                'type' => 'withdraw_rejected',
+                'profit' => 'plus',
+                'details' => 'Retiro rechazado: ' . request('motivo_rechazo')
+            ]);
+    
+            \DB::commit();
+    
+            return response()->json([
+                'success' => true,
+                'message' => __('Withdraw Rejected Successfully.')
+            ]);
+    
+        } catch (\Exception $e) {
+            \DB::rollback();
+            \Log::error('Error en rechazo de retiro: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy($id)
