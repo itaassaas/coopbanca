@@ -227,51 +227,16 @@ class UserController extends Controller
 
     public function reject($id)
     {
-        try {
-            $motivo = request()->input('motivo_rechazo');
-            
-            if (empty($motivo)) {
-                return response()->json([
-                    'message' => 'El motivo de rechazo es requerido'
-                ], 422);
-            }
-    
-            DB::beginTransaction();
-    
-            $withdraw = Withdraw::findOrFail($id);
-            $account = User::findOrFail($withdraw->user->id);
-    
-            $account->balance += ($withdraw->amount + $withdraw->fee);
-            $account->save();
-    
-            $withdraw->update([
-                'status' => 'rejected',
-                'motivo_rechazo' => $motivo
-            ]);
-    
-            Transaction::create([
-                'user_id' => $account->id,
-                'amount' => $withdraw->amount,
-                'type' => 'withdraw_rejected',
-                'profit' => 'plus',
-                'txnid' => str_random(12),
-                'details' => 'Retiro rechazado: ' . $motivo
-            ]);
-    
-            DB::commit();
-    
-            return response()->json([
-                'success' => true,
-                'message' => 'Retiro rechazado exitosamente'
-            ]);
-    
-        } catch (\Exception $e) {
-            DB::rollback();
-            \Log::error($e);
-            return response()->json([
-                'message' => 'Error al procesar el rechazo'
-            ], 500);
-        }
+        $withdraw = Withdraw::findOrFail($id);
+        $account = User::findOrFail($withdraw->user->id);
+        $account->balance = $account->balance + $withdraw->amount + $withdraw->fee;
+        $account->update();
+        $data['status'] = "rejected";
+        $data['motivo_rechazo'] = "motivo_rechazo";
+        $withdraw->update($data);
+
+        $msg = __('Withdraw Rejected Successfully.');
+        return response()->json($msg);
     }
 
     public function destroy($id)
