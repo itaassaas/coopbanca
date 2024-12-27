@@ -70,8 +70,16 @@
                     </tr>
                     <tr>
                       <th>{{__('KYC')}}</th>
-                      <td>{{$data->kyc_status}}</td>
-                    </tr>
+                      <td>
+                          @if($data->kyc_status == 0)
+                              <span class="badge badge-warning">Pendiente</span>
+                          @elseif($data->kyc_status == 1)
+                              <span class="badge badge-success">Aprobado</span>
+                          @elseif($data->kyc_status == 2)
+                              <span class="badge badge-danger">Rechazado</span>
+                          @endif
+                      </td>
+                  </tr>
 
                     </table>
                 </div>
