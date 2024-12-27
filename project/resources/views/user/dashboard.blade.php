@@ -1,6 +1,15 @@
 @extends('layouts.user')
 
 @push('css')
+
+<style>
+.install-banner {
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    margin-bottom: 20px;
+}
+</style>
     
 @endpush
 
@@ -12,6 +21,14 @@
 
 
 <div class="container-xl">
+
+  <div class="alert alert-info install-banner alert-dismissible fade show" role="alert">
+          <div class="d-flex align-items-center">
+              <i class="fas fa-mobile-alt me-2"></i>
+              <strong>¡Consejo!</strong>&nbsp;Para acceder más rápido, guarda esta página como acceso directo en tu celular.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+      </div>
 
     <div class="page-header d-print-none">
 
