@@ -4,10 +4,14 @@
 
 <style>
 .install-banner {
-    background: linear-gradient(45deg, #4CAF50, #45a049);
+    background: linear-gradient(45deg, #2196F3, #1976D2);
     color: white;
     border: none;
     margin-bottom: 20px;
+    padding: 15px;
+}
+.fa-share-square, .fa-plus-square, .fa-ellipsis-v {
+    color: #FFD700;
 }
 .install-btn {
     background: rgba(255,255,255,0.2);
@@ -32,43 +36,56 @@
 
     <div class="container-xl">
 
-      <div class="alert alert-info install-banner alert-dismissible fade show" role="alert">
-          <div class="d-flex align-items-center justify-content-between w-100">
-              <div class="d-flex align-items-center">
-                  <i class="fas fa-mobile-alt me-2"></i>
-                  <strong>¡Consejo!</strong>&nbsp;Para acceder más rápido, instala la app en tu celular.
-              </div>
-              <div>
-                  <button id="installButton" class="btn btn-sm install-btn" style="display: none;">
-                      Instalar App
-                  </button>
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-          </div>
-      </div>
-
+            <div class="alert alert-info install-banner alert-dismissible fade show" role="alert">
+                <div class="d-flex align-items-center justify-content-between w-100" id="pwaPrompt">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-mobile-alt me-2"></i>
+                        <span id="installInstructions">
+                            <strong>¡Importante!</strong> Para acceder más rápido:
+                        </span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
 
             <script>
-              let deferredPrompt;
+                // Detect iOS
+                const isIos = () => {
+                    return /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+                }
 
-              window.addEventListener('beforeinstallprompt', (e) => {
-                  e.preventDefault();
-                  deferredPrompt = e;
-                  document.getElementById('installButton').style.display = 'inline-block';
-              });
+                // Detect if standalone
+                const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
 
-              document.getElementById('installButton').addEventListener('click', async () => {
-                  if (deferredPrompt) {
-                      deferredPrompt.prompt();
-                      const { outcome } = await deferredPrompt.userChoice;
-                      if (outcome === 'accepted') {
-                          document.getElementById('installButton').style.display = 'none';
-                      }
-                      deferredPrompt = null;
-                  }
-              });
+                document.addEventListener('DOMContentLoaded', (event) => {
+                    const installInstructions = document.getElementById('installInstructions');
+                    
+                    if (isIos()) {
+                        if (!isInStandaloneMode()) {
+                            installInstructions.innerHTML = `
+                                <strong>¡Importante!</strong> Para instalar en iPhone/iPad: 
+                                Toca el ícono <i class="fas fa-share-square mx-1"></i> y luego 
+                                "Añadir a Pantalla de Inicio" <i class="fas fa-plus-square mx-1"></i>
+                            `;
+                        }
+                    } else {
+                        // For Android
+                        if (window.matchMedia('(display-mode: standalone)').matches) {
+                            document.getElementById('pwaPrompt').style.display = 'none';
+                        } else {
+                            installInstructions.innerHTML = `
+                                <strong>¡Importante!</strong> Para instalar en Android: 
+                                Toca los tres puntos <i class="fas fa-ellipsis-v mx-1"></i> y luego 
+                                "Añadir a Pantalla Principal" <i class="fas fa-plus-square mx-1"></i>
+                            `;
+                        }
+                    }
+                });
               </script>
+      
 
+
+      </div>
     <div class="page-header d-print-none">
 
     </div>
