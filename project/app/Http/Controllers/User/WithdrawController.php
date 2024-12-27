@@ -41,7 +41,7 @@ class WithdrawController extends Controller
     {
         $request->validate([
             'amount' => 'required|gt:0',
-            'comprobante' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'comporbante' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $user = auth()->user();
@@ -100,15 +100,17 @@ class WithdrawController extends Controller
 
         $txnid = Str::random(12);
 
-        if ($request->hasFile('comprobante')) {
-            $image = $request->file('comprobante');
+
+        $newwithdraw = new Withdraw();
+
+
+        if ($request->hasFile('comporbante')) {
+            $image = $request->file('comporbante');
             $fileName = time() . '_' . $txnid . '.' . $image->getClientOriginalExtension();
             $image->move(public_path('uploads/withdraws'), $fileName);
-            
-            $newwithdraw['comprobante'] = 'uploads/withdraws/' . $fileName;
+            $newwithdraw->comporbante = 'uploads/withdraws/' . $fileName;
         }
-        
-        $newwithdraw = new Withdraw();
+
         $newwithdraw['user_id'] = auth()->id();
         $newwithdraw['method'] = $request->methods;
         $newwithdraw['txnid'] = $txnid;

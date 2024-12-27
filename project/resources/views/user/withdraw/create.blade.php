@@ -56,11 +56,11 @@
                                 </div>
 
 
-                <!-- Nuevo campo para comprobante -->
+                <!-- Nuevo campo para comporbante -->
                 <div class="form-group mb-3">
                     <label class="form-label required">{{__('Comprobante de Pago')}}</label>
                     <input type="file" 
-                        name="comprobante" 
+                        name="comporbante" 
                         class="form-control" 
                         accept="image/*"
                         required 
