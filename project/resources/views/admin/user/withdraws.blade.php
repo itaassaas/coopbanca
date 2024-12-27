@@ -55,7 +55,12 @@
                 </button>
             </div>
             <div class="modal-body">
-
+                        <div class="form-group">
+                            <label class="font-weight-bold">{{ __('Comprobante') }}</label>
+                            <div class="comprobante-preview">
+                                <img src="{{ asset($withdraw->comporbante) }}" alt="Comprobante" class="img-fluid" style="max-width: 100%; height: auto;">
+                            </div>
+                        </div>
             </div>
             <div class="modal-footer">
             <a href="javascript:;" class="btn btn-secondary" data-dismiss="modal">{{ __("Back") }}</a>
@@ -145,6 +150,39 @@ var table = $('#geniustable').DataTable({
         $( "#details .modal-body" ).html( data );
       });
     })
+
+
+
+
+
+    $(document).on('click', '#applicationDetails', function () {
+        let detailsUrl = $(this).data('href');
+        $.get(detailsUrl, function(data) {
+            $("#details .modal-body").html(data);
+            
+            // Añadir código para manejar la imagen del comprobante
+            if (data.comprobante) {
+                $('.comprobante-preview').show();
+                $('#comprobanteImage').attr('src', '{{ asset("") }}' + data.comprobante);
+            } else {
+                $('.comprobante-preview').hide();
+            }
+            
+            $('#details').modal('show');
+        });
+    });
+
+    // Opcional: Añadir función para zoom de imagen
+    $(document).on('click', '#comprobanteImage', function() {
+        window.open($(this).attr('src'), '_blank');
+    });
+
+    // Añadir estilos CSS
+    $('#comprobanteImage').css({
+        'cursor': 'pointer',
+        'max-height': '300px',
+        'object-fit': 'contain'
+    });
 
 
 abstract
