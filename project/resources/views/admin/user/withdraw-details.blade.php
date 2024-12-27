@@ -55,29 +55,24 @@ use Illuminate\Support\Facades\Storage;
                                                     </tr>
                                                    
                                                     <tr>
-                                                        <th>{{ __("Comprobante") }}</th>
-                                                        <td>
-                                                            @if($withdraw->comporbante)
-                                                                <div class="comprobante-preview">
-                                                                    @php
-                                                                        // Ajustar la ruta para que coincida con la estructura real
-                                                                        $imageUrl = str_replace('project/public/assets/images', '', $withdraw->comporbante);
-                                                                    @endphp
-                                                                    <img src="{{ Storage::disk('public')->url($imageUrl) }}"
-                                                                        alt="Comprobante de retiro" 
-                                                                        class="img-fluid"
-                                                                        style="max-width: 200px; cursor: pointer; transition: transform 0.3s;"
-                                                                        onerror="this.onerror=null; this.src='{{ asset('assets/images/noimage.jpg') }}'"
-                                                                        onclick="window.open(this.src, '_blank')">
-                                                                </div>
-                                                                <small class="text-muted d-block mt-1">Click para ampliar</small>
-                                                            @else
-                                                                <span class="text-muted">{{ __("No disponible") }}</span>
-                                                            @endif
-                                                        </td>
-</tr>
-
-                                                    <tr>
+                                                            <th>{{ __("Comprobante") }}</th>
+                                                            <td>
+                                                                @if($withdraw->comporbante)
+                                                                    <div class="comprobante-preview">
+                                                                        <img src="{{ asset('project/public/assets/images/' . basename($withdraw->comporbante)) }}"
+                                                                            alt="Comprobante de retiro" 
+                                                                            class="img-fluid"
+                                                                            style="max-width: 200px; cursor: pointer; transition: transform 0.3s;"
+                                                                            onerror="this.onerror=null; this.src='{{ asset('assets/images/noimage.jpg') }}'"
+                                                                            onclick="window.open(this.src, '_blank')">
+                                                                    </div>
+                                                                    <small class="text-muted d-block mt-1">Click para ampliar</small>
+                                                                @else
+                                                                    <span class="text-muted">{{ __("No disponible") }}</span>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                    
                                                         <th>{{ __("Withdraw Account Details") }}</th>
                                                         <td>{{$withdraw->details}}</td>
                                                     </tr>
