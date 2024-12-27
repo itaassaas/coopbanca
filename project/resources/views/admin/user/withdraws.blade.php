@@ -173,6 +173,23 @@ var table = $('#geniustable').DataTable({
     })
 
 
+    $('#reject-form').on('submit', function(e) {
+    e.preventDefault();
+    var motivo = $('#motivo_rechazo').val();
+    
+    $.ajax({
+        url: $(this).attr('action'),
+        method: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            motivo_rechazo: motivo
+        },
+        success: function(response) {
+            // manejar respuesta
+        }
+    });
+});
+
 abstract
 </script>
 
