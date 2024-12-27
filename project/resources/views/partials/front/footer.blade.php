@@ -21,6 +21,10 @@
                     <a href="index.html">
                         <img src= "https://www.aedcr.com/sites/default/files/2022-05/logo_banco-nacional.png" alt="logo">
                     </a>
+                    <a href="index.html">
+                        <img src= "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/LOGO_BCR.svg/800px-LOGO_BCR.svg.png" alt="logo">
+                    </a>
+                    
                 </div>
                 <div class="footer-links">
                     <h5 class="title">@lang('About')</h5>
