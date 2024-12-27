@@ -146,6 +146,7 @@
                   <div class="content">
                     <div class="subheader">{{__('Account Number')}}</div>
                     <div class="h1 mb-0 mt-2">{{ $user->account_number }}</div>
+                    <div class="h1 mb-0 mt-2">{{ $user->kyc_status}}</div>
                   </div>
                 </div>
               </div>
