@@ -51,16 +51,17 @@
                                                     <tr>
                                                         <th>{{ __("Comprobante") }}</th>
                                                         <td>
-                                                            @if($withdraw->comporbante)
+                                                            @if($withdraw->comporbante && File::exists(public_path($withdraw->comporbante)))
                                                                 <div class="comprobante-preview">
                                                                     <img src="{{ asset($withdraw->comporbante) }}" 
                                                                         alt="Comprobante de retiro" 
                                                                         class="img-fluid" 
                                                                         style="max-width: 200px; cursor: pointer;"
+                                                                        onerror="this.onerror=null; this.src='{{ asset('assets/images/noimage.jpg') }}'"
                                                                         onclick="window.open(this.src)">
                                                                 </div>
                                                             @else
-                                                                <span class="text-muted">{{ __("No disponible") }}</span>
+                                                                <span class="text-muted">{{ __("Comprobante no disponible") }}</span>
                                                             @endif
                                                         </td>
                                                     </tr>
