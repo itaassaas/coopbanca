@@ -112,20 +112,38 @@ class WithdrawController extends Controller
 
 
         if ($request->hasFile('comporbante')) {
-            $image = $request->file('comporbante');
-            $fileName = time() . '_' . $txnid . '.' . $image->getClientOriginalExtension();
-            
-            // Asegurar que el directorio existe
-            $path = public_path('assets/images');
-            if (!file_exists($path)) {
-                mkdir($path, 0775, true);
+            try {
+                $image = $request->file('comporbante');
+                $fileName = time() . '_' . $txnid . '.' . $image->getClientOriginalExtension();
+                
+                // Asegurar que el directorio existe
+                $path = public_path('assets/images');
+                if (!file_exists($path)) {
+                    mkdir($path, 0775, true);
+                }
+                
+                // Verificar permisos del directorio
+                if (!is_writable($path)) {
+                    throw new \Exception('Directory is not writable');
+                }
+                
+                // Mover el archivo con verificación
+                if (!$image->move($path, $fileName)) {
+                    throw new \Exception('Failed to move uploaded file');
+                }
+                
+                // Verificar que el archivo existe después de moverlo
+                if (!file_exists($path . '/' . $fileName)) {
+                    throw new \Exception('File was not saved correctly');
+                }
+                
+                $newwithdraw->comporbante = 'assets/images/' . $fileName;
+                
+            } catch (\Exception $e) {
+                \Log::error('Error uploading file: ' . $e->getMessage());
+                return redirect()->back()
+                    ->with('error', 'Error al cargar la imagen: ' . $e->getMessage());
             }
-            
-            // Mover el archivo a assets/images
-            $image->move($path, $fileName);
-            
-            // Guardar la ruta relativa en la base de datos
-            $newwithdraw->comporbante = 'assets/images/' . $fileName;
         }
 
         $newwithdraw['user_id'] = auth()->id();
