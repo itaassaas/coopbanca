@@ -1,4 +1,7 @@
 @extends('layouts.admin')
+<!-- Primero, agregar SweetAlert2 CDN en el head o antes de cerrar body -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 @section('content')
 
@@ -173,14 +176,14 @@ var table = $('#geniustable').DataTable({
 abstract
 </script>
 
+
+<!-- Modificar el script existente -->
 <script>
 $(document).ready(function() {
-    // Store the URL when modal opens
     $('#confirm-delete').on('show.bs.modal', function(e) {
         $(this).find('.btn-ok').attr('data-href', $(e.relatedTarget).data('href'));
     });
 
-    // Handle reject button click
     $('.btn-ok').on('click', function(e) {
         e.preventDefault();
         var $this = $(this);
@@ -198,29 +201,33 @@ $(document).ready(function() {
 
         $.ajax({
             url: url,
-            type: 'POST',
+            type: 'GET', // Cambiar a GET temporalmente
             data: {
                 _token: '{{ csrf_token() }}',
                 motivo_rechazo: motivo,
-                status: 2 // rejection status
+                status: 2
             },
             success: function(response) {
                 if (response.success) {
-                    $('#confirm-delete').modal('hide');
-                    window.location.reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Éxito',
+                        text: 'Retiro rechazado exitosamente'
+                    }).then(() => {
+                        window.location.reload();
+                    });
                 }
             },
             error: function(xhr) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Hubo un error al procesar su solicitud'
+                    text: 'Error al procesar la solicitud'
                 });
             }
         });
     });
 });
 </script>
-
 @endsection
 

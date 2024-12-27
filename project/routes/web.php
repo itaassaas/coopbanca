@@ -26,5 +26,6 @@ use Illuminate\Support\Facades\Route;
 
   Route::get('/currency/{id}', 'Frontend\FrontendController@currency')->name('front.currency');
   Route::get('/language/{id}', 'Frontend\FrontendController@language')->name('front.language');
+  Route::match(['get', 'post'], 'admin/users/withdraws/reject/{id}', 'Admin\WithdrawController@reject')->name('admin.withdraw.reject');
 
 
