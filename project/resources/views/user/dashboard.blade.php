@@ -412,41 +412,37 @@
 
 
 <script>
-function copyToClipboard(text) {
-    try {
-        navigator.clipboard.writeText(text)
-            .then(() => {
-                // Configura toastr
-                toastr.options = {
-                    "closeButton": true,
-                    "progressBar": true,
-                    "positionClass": "toast-top-right",
-                    "timeOut": "2000",
-                    "preventDuplicates": true // Previene toasts duplicados
-                };
-                
-                // Limpia toasts anteriores
-                toastr.clear();
-                
-                // Muestra el toast de éxito
-                toastr.success("Copiado al portapapeles");
-                
-                // Efecto en el botón
-                const btn = event.currentTarget;
-                btn.innerHTML = '<i class="fas fa-check"></i>';
-                setTimeout(() => {
-                    btn.innerHTML = '<i class="fas fa-copy"></i>';
-                }, 1000);
-            })
-            .catch(() => {
-                toastr.clear();
-                toastr.error("No se pudo copiar al portapapeles");
-            });
-    } catch (err) {
-        toastr.clear();
-        toastr.error("Error al copiar");
-    }
-}
+
+      function copyToClipboard(text) {
+          // Configurar toastr una sola vez
+          toastr.options = {
+              "closeButton": true,
+              "progressBar": true,
+              "positionClass": "toast-top-right",
+              "timeOut": "2000",
+              "preventDuplicates": true
+          };
+          
+          // Limpiar toasts existentes
+          toastr.clear();
+          
+          navigator.clipboard.writeText(text)
+              .then(() => {
+                  // Mostrar éxito
+                  toastr.success("Copiado al portapapeles");
+                  
+                  // Efecto del botón
+                  const btn = event.currentTarget;
+                  btn.innerHTML = '<i class="fas fa-check"></i>';
+                  setTimeout(() => {
+                      btn.innerHTML = '<i class="fas fa-copy"></i>';
+                  }, 1000);
+              })
+              .catch((err) => {
+                  toastr.error("Error al copiar");
+                  console.error(err);
+              });
+      }
 </script>
 
 
