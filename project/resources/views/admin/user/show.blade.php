@@ -68,6 +68,10 @@
                       <th>{{__('Joined')}}</th>
                       <td>{{$data->created_at->diffForHumans()}}</td>
                     </tr>
+                    <tr>
+                      <th>{{__('KYC')}}</th>
+                      <td>{{$data->kyc_status}}</td>
+                    </tr>
 
                     </table>
                 </div>
