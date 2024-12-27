@@ -154,9 +154,12 @@
 
                     <div class="d-flex align-items-center">
                         <div class="h1 mb-0 mt-2">{{ $user->account_number }}</div>
-                        <button class="btn btn-sm btn-light ml-2" onclick="copyToClipboard('{{ $user->account_number }}')" data-toggle="tooltip" title="Copiar">
-                            <i class="fas fa-copy"></i>
-                        </button>
+                          <button class="btn btn-sm btn-light ml-2" 
+                                  onclick="copyToClipboard('{{ $user->account_number }}', event)" 
+                                  data-toggle="tooltip" 
+                                  title="Copiar">
+                              <i class="fas fa-copy"></i>
+                          </button>
                     </div>
                     
                     <div class="h1 mb-0 mt-2">
@@ -413,36 +416,46 @@
 
 <script>
 
-      function copyToClipboard(text) {
-          // Configurar toastr una sola vez
-          toastr.options = {
-              "closeButton": true,
-              "progressBar": true,
-              "positionClass": "toast-top-right",
-              "timeOut": "2000",
-              "preventDuplicates": true
-          };
-          
-          // Limpiar toasts existentes
-          toastr.clear();
-          
-          navigator.clipboard.writeText(text)
-              .then(() => {
-                  // Mostrar éxito
-                  toastr.success("Copiado al portapapeles");
-                  
-                  // Efecto del botón
-                  const btn = event.currentTarget;
-                  btn.innerHTML = '<i class="fas fa-check"></i>';
-                  setTimeout(() => {
-                      btn.innerHTML = '<i class="fas fa-copy"></i>';
-                  }, 1000);
-              })
-              .catch((err) => {
-                  toastr.error("Error al copiar");
-                  console.error(err);
-              });
-      }
+function copyToClipboard(text, event) {
+    // Configurar toastr una sola vez
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "2000",
+        "preventDuplicates": true
+    };
+    
+    // Limpiar toasts existentes
+    toastr.clear();
+    
+    // Verificar si tenemos el evento y el botón
+    const btn = event?.currentTarget || event?.target;
+    if (!btn) {
+        console.error('No se pudo encontrar el botón');
+        return;
+    }
+    
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            toastr.success("Copiado al portapapeles");
+            
+            // Guardar el contenido original del botón
+            const originalContent = btn.innerHTML;
+            
+            // Efecto del botón
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                btn.innerHTML = originalContent;
+            }, 1000);
+        })
+        .catch((err) => {
+            toastr.error("Error al copiar");
+            console.error(err);
+        });
+}
+
+
 </script>
 
 
