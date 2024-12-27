@@ -1,8 +1,7 @@
 @extends('layouts.load')
 @section('content')
 
-<?php
-@inject('storage', 'Illuminate\Support\Facades\Storage')?>
+
 
                         <div class="content-area no-padding">
                             <div class="add-product-content">
