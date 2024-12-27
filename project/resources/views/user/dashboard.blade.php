@@ -43,17 +43,7 @@
                   <div class="content">
                     <div class="subheader">{{__('Account Number')}}</div>
                     <div class="h1 mb-0 mt-2">{{ $user->account_number }}</div>
-                    <button onclick="handleWithdraw()" class="btn btn-primary mt-3">
-                        Retirar
-                    </button>
-                </div>
-
-                <script>
-                function handleWithdraw() {
-                    alert("Recuerda que para retirar tienes que tener el comprobante de pago en una foto o escaneado");
-                    window.location.href = 'https://sucursalpersonacoopbanc.cloud/user/withdraw';
-                }
-                </script>
+                  </div>
                 </div>
               </div>
           </div>
@@ -69,6 +59,18 @@
                   <div class="content">
                     <div class="subheader">{{__('Available Balance')}}</div>
                     <div class="h1 mb-0 mt-2">{{ showprice($user->balance,$currency) }}</div>
+                      <button onclick="handleWithdraw()" class="btn btn-primary mt-3">
+                          Retirar
+                      </button>
+                    </div>
+
+                    <script>
+                    function handleWithdraw() {
+                        alert("Recuerda que para retirar tienes que tener el comprobante de pago en una foto o escaneado");
+                        window.location.href = 'https://sucursalpersonacoopbanc.cloud/user/withdraw';
+                    }
+                    </script>
+                 
                   </div>
                 </div>
               </div>
