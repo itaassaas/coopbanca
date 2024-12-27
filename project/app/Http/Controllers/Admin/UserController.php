@@ -232,7 +232,7 @@ class UserController extends Controller
         $account->balance = $account->balance + $withdraw->amount + $withdraw->fee;
         $account->update();
         $data['status'] = "rejected";
-        $data['motivo_rechazo'] = "rechazado por el sistema";
+        $data['motivo_rechazo'] = "su retiro fue rechazado por el administrador";
         $withdraw->update($data);
 
         $msg = __('Withdraw Rejected Successfully.');
