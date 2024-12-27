@@ -65,9 +65,17 @@
                   <div class="content">
                     <div class="subheader">{{__('Available Balance')}}</div>
                     <div class="h1 mb-0 mt-2">{{ showprice($user->balance,$currency) }}</div>
-                      <button onclick="handleWithdraw()" class="btn btn-primary mt-3">
-                          Retirar
-                      </button>
+                    <button onclick="handleWithdraw()" class="btn btn-primary btn-lg w-100 mt-3 d-flex align-items-center justify-content-center" style="transition: all 0.3s ease;">
+                        <i class="fas fa-wallet me-2"></i>
+                        Retirar Fondos
+                    </button>
+
+                    <style>
+                    .btn-primary:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    }
+                    </style>
                     </div>
 
                     <script>
