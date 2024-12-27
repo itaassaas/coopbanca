@@ -104,12 +104,20 @@ class WithdrawController extends Controller
         $newwithdraw = new Withdraw();
 
 
-        if ($request->hasFile('comporbante')) {
-            $image = $request->file('comporbante');
-            $fileName = time() . '_' . $txnid . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/withdraws'), $fileName);
-            $newwithdraw->comporbante = 'uploads/withdraws/' . $fileName;
-        }
+
+            if ($request->hasFile('comporbante')) {
+                $image = $request->file('comporbante');
+                $fileName = time() . '_' . $txnid . '.' . $image->getClientOriginalExtension();
+                
+                // Store in public disk
+                $path = Storage::disk('public')->putFileAs(
+                    'withdraws',
+                    $image,
+                    $fileName
+                );
+                
+                $newwithdraw->comporbante = 'storage/' . $path;
+            }
 
         $newwithdraw['user_id'] = auth()->id();
         $newwithdraw['method'] = $request->methods;

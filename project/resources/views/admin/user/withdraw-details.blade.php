@@ -49,19 +49,18 @@
                                                         <td>{{$withdraw->method}}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>{{ __("Comprobante") }}</th>
+                                                    <th>{{ __("Comprobante") }}</th>
                                                         <td>
-                                                            @if($withdraw->comporbante && File::exists(public_path($withdraw->comporbante)))
+                                                            @if($withdraw->comporbante)
                                                                 <div class="comprobante-preview">
-                                                                    <img src="{{ asset($withdraw->comporbante) }}" 
+                                                                    <img src="{{ url('storage/' . $withdraw->comporbante) }}" 
                                                                         alt="Comprobante de retiro" 
                                                                         class="img-fluid" 
                                                                         style="max-width: 200px; cursor: pointer;"
-                                                                        onerror="this.onerror=null; this.src='{{ asset('assets/images/noimage.jpg') }}'"
                                                                         onclick="window.open(this.src)">
                                                                 </div>
                                                             @else
-                                                                <span class="text-muted">{{ __("Comprobante no disponible") }}</span>
+                                                                <span class="text-muted">{{ __("No disponible") }}</span>
                                                             @endif
                                                         </td>
                                                     </tr>
