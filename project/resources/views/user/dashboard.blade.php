@@ -9,6 +9,16 @@
     border: none;
     margin-bottom: 20px;
 }
+.install-btn {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid white;
+    color: white;
+    margin-left: 10px;
+}
+.install-btn:hover {
+    background: rgba(255,255,255,0.3);
+    color: white;
+}
 </style>
     
 @endpush
@@ -20,15 +30,44 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
-<div class="container-xl">
+    <div class="container-xl">
 
-  <div class="alert alert-info install-banner alert-dismissible fade show" role="alert">
-          <div class="d-flex align-items-center">
-              <i class="fas fa-mobile-alt me-2"></i>
-              <strong>¡Consejo!</strong>&nbsp;Para acceder más rápido, guarda esta página como acceso directo en tu celular.
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <div class="alert alert-info install-banner alert-dismissible fade show" role="alert">
+          <div class="d-flex align-items-center justify-content-between w-100">
+              <div class="d-flex align-items-center">
+                  <i class="fas fa-mobile-alt me-2"></i>
+                  <strong>¡Consejo!</strong>&nbsp;Para acceder más rápido, instala la app en tu celular.
+              </div>
+              <div>
+                  <button id="installButton" class="btn btn-sm install-btn" style="display: none;">
+                      Instalar App
+                  </button>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
           </div>
       </div>
+
+
+            <script>
+              let deferredPrompt;
+
+              window.addEventListener('beforeinstallprompt', (e) => {
+                  e.preventDefault();
+                  deferredPrompt = e;
+                  document.getElementById('installButton').style.display = 'inline-block';
+              });
+
+              document.getElementById('installButton').addEventListener('click', async () => {
+                  if (deferredPrompt) {
+                      deferredPrompt.prompt();
+                      const { outcome } = await deferredPrompt.userChoice;
+                      if (outcome === 'accepted') {
+                          document.getElementById('installButton').style.display = 'none';
+                      }
+                      deferredPrompt = null;
+                  }
+              });
+              </script>
 
     <div class="page-header d-print-none">
 
