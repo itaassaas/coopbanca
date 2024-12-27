@@ -179,14 +179,8 @@ abstract
 
 
 <!-- Remove or comment out the 'abstract' line -->
+// Replace AJAX call with:
 <script>
-$(document).on('click', '#applicationDetails', function () {
-    let detailsUrl = $(this).data('href');
-    $.get(detailsUrl, function( data ) {
-        $( "#details .modal-body" ).html( data );
-    });
-});
-
 $(document).ready(function() {
     $('#confirm-delete').on('show.bs.modal', function(e) {
         $(this).find('.btn-ok').attr('data-href', $(e.relatedTarget).data('href'));
@@ -207,47 +201,38 @@ $(document).ready(function() {
             return;
         }
 
-
         $.ajax({
             url: url,
             type: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
             data: JSON.stringify({
-                _token: '{{ csrf_token() }}',
-                motivo_rechazo: motivo,
-                status: 'rejected'
+                motivo_rechazo: motivo
             }),
-            contentType: 'application/json',
             success: function(response) {
-                console.log('Success:', response);
                 $('#confirm-delete').modal('hide');
                 Swal.fire({
                     icon: 'success',
                     title: 'Éxito',
-                    text: 'Retiro rechazado exitosamente',
-                    confirmButtonText: 'Ok'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.reload();
-                    }
+                    text: 'Retiro rechazado exitosamente'
+                }).then(() => {
+                    window.location.reload();
                 });
             },
-            error: function(xhr, status, error) {
-                console.error('Error Details:', xhr.responseText);
-                let errorMessage = 'Error del servidor';
+            error: function(xhr) {
+                let message = 'Error del servidor';
                 try {
                     const response = JSON.parse(xhr.responseText);
-                    errorMessage = response.message || errorMessage;
+                    message = response.message || message;
                 } catch(e) {}
                 
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: errorMessage,
-                    confirmButtonText: 'Cerrar'
+                    text: message
                 });
             }
         });

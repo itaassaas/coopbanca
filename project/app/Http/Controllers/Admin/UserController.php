@@ -228,60 +228,48 @@ class UserController extends Controller
     public function reject($id)
     {
         try {
-            // Validar el request
-            if (!request()->has('motivo_rechazo')) {
+            $motivo = request()->input('motivo_rechazo');
+            
+            if (empty($motivo)) {
                 return response()->json([
-                    'success' => false,
                     'message' => 'El motivo de rechazo es requerido'
                 ], 422);
             }
     
-            \DB::beginTransaction();
+            DB::beginTransaction();
     
-            // Buscar y validar el retiro
             $withdraw = Withdraw::findOrFail($id);
-            if (!$withdraw) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Retiro no encontrado'
-                ], 404);
-            }
-    
             $account = User::findOrFail($withdraw->user->id);
     
-            // Actualizar balance
-            $account->balance = $account->balance + $withdraw->amount + $withdraw->fee;
+            $account->balance += ($withdraw->amount + $withdraw->fee);
             $account->save();
     
-            // Actualizar retiro
-            $withdraw->status = "rejected";
-            $withdraw->motivo_rechazo = request('motivo_rechazo');
-            $withdraw->save();
+            $withdraw->update([
+                'status' => 'rejected',
+                'motivo_rechazo' => $motivo
+            ]);
     
-            // Crear transacción
             Transaction::create([
                 'user_id' => $account->id,
                 'amount' => $withdraw->amount,
                 'type' => 'withdraw_rejected',
                 'profit' => 'plus',
-                'details' => 'Retiro rechazado: ' . request('motivo_rechazo'),
-                'txnid' => str_random(12)
+                'txnid' => str_random(12),
+                'details' => 'Retiro rechazado: ' . $motivo
             ]);
     
-            \DB::commit();
+            DB::commit();
     
             return response()->json([
                 'success' => true,
-                'message' => __('Withdraw Rejected Successfully.')
+                'message' => 'Retiro rechazado exitosamente'
             ]);
     
         } catch (\Exception $e) {
-            \DB::rollback();
-            \Log::error('Error en rechazo de retiro: ' . $e->getMessage());
-            
+            DB::rollback();
+            \Log::error($e);
             return response()->json([
-                'success' => false,
-                'message' => 'Error al procesar el rechazo: ' . $e->getMessage()
+                'message' => 'Error al procesar el rechazo'
             ], 500);
         }
     }
