@@ -74,11 +74,11 @@
                     function handleWithdraw() {
                         Swal.fire({
                             title: '¡Importante!',
-                            text: 'Recuerda que para retirar tienes que tener el comprobante de pago en una foto o escaneado',
+                            text: 'Recuerda que para retirar tienes que tener el comprobante de pago en una foto o escaneado. Lo tienes?',
                             icon: 'info',
                             showCancelButton: true,
-                            confirmButtonText: 'Sí, continuar',
-                            cancelButtonText: 'No, cancelar',
+                            confirmButtonText: 'Sí',
+                            cancelButtonText: 'No',
                             confirmButtonColor: '#3085d6',
                             cancelButtonColor: '#d33',
                         }).then((result) => {
