@@ -22,7 +22,7 @@
                         <img src= "https://www.aedcr.com/sites/default/files/2022-05/logo_banco-nacional.png" alt="logo">
                     </a>
                     <a href="index.html">
-                        <img src= "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/LOGO_BCR.svg/800px-LOGO_BCR.svg.png" alt="logo">
+                        <img src= "https://plazareal.co.cr/wp-content/uploads/2015/11/Logos-PR-BCR.png" alt="logo">
                     </a>
                     
                 </div>
