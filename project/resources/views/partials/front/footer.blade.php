@@ -6,6 +6,9 @@
                     <a href="index.html">
                         <img src="{{ asset('assets/images/'.$gs->footer_logo) }}" alt="logo">
                     </a>
+                    <a href="index.html">
+                        <img src= "https://plazareal.co.cr/wp-content/uploads/2015/11/Logos-PR-BCR.png" alt="logo">
+                    </a>
                 </div>
                 <div class="footer-logo">
                 <h5 class="title">con el apoyo de:</h5>
@@ -21,9 +24,7 @@
                     <a href="index.html">
                         <img src= "https://www.aedcr.com/sites/default/files/2022-05/logo_banco-nacional.png" alt="logo">
                     </a>
-                    <a href="index.html">
-                        <img src= "https://plazareal.co.cr/wp-content/uploads/2015/11/Logos-PR-BCR.png" alt="logo">
-                    </a>
+                    
                     
                 </div>
                 <div class="footer-links">
