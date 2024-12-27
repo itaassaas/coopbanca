@@ -73,19 +73,24 @@ use Illuminate\Support\Facades\Storage;
                                                             </td>
                                                         </tr>
 
-                                                        <!-- resources/views/admin/withdraws/[view].blade.php -->
-                                                        <form method="POST" action="{{ route('admin.withdraw.reject', $withdraw->id) }}">
-                                                            @csrf
-                                                            <div class="form-group">
-                                                                <label>Motivo del Rechazo</label>
-                                                                <textarea name="motivo_rechazo" class="form-control" required></textarea>
-                                                            </div>
-                                                            <button type="submit" class="btn btn-danger">Rechazar</button>
-                                                        </form>
+                                                        
                                     
                                                         <th>{{ __("Withdraw Account Details") }}</th>
                                                         <td>{{$withdraw->details}}</td>
                                                     </tr>
+
+                                                    <!-- Add this new row for motivo_rechazo -->
+                                                    @if($withdraw->motivo_rechazo)
+                                                    <tr>
+                                                        <th>{{ __("Motivo de Rechazo") }}</th>
+                                                        <td>
+                                                            <div class="alert alert-warning mb-0">
+                                                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                                                {{$withdraw->motivo_rechazo}}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    @endif
                                                 </table>
                                             </div>
 
