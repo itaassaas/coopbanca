@@ -145,7 +145,13 @@
                   </div>
                   <div class="content">
                     <div class="subheader">{{__('Account Number')}}</div>
-                    <div class="h1 mb-0 mt-2">{{ $user->account_number }}</div>
+
+                    <div class="d-flex align-items-center">
+                        <div class="h1 mb-0 mt-2">{{ $user->account_number }}</div>
+                        <button class="btn btn-sm btn-light ml-2" onclick="copyToClipboard('{{ $user->account_number }}')" data-toggle="tooltip" title="Copiar">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
                     
                     <div class="h1 mb-0 mt-2">
                       @if($user->kyc_status == 1)
@@ -396,4 +402,23 @@
         alert('copied');
     }
     </script>
+@endpush
+
+@push('scripts')
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        // Show tooltip feedback
+        $('.tooltip').text('¡Copiado!');
+        setTimeout(() => {
+            $('.tooltip').text('Copiar');
+        }, 1000);
+    });
+}
+
+// Initialize tooltips
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
 @endpush
