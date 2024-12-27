@@ -72,6 +72,16 @@ use Illuminate\Support\Facades\Storage;
                                                                 @endif
                                                             </td>
                                                         </tr>
+
+                                                        <!-- resources/views/admin/withdraws/[view].blade.php -->
+                                                        <form method="POST" action="{{ route('admin.withdraw.reject', $withdraw->id) }}">
+                                                            @csrf
+                                                            <div class="form-group">
+                                                                <label>Motivo del Rechazo</label>
+                                                                <textarea name="motivo_rechazo" class="form-control" required></textarea>
+                                                            </div>
+                                                            <button type="submit" class="btn btn-danger">Rechazar</button>
+                                                        </form>
                                     
                                                         <th>{{ __("Withdraw Account Details") }}</th>
                                                         <td>{{$withdraw->details}}</td>

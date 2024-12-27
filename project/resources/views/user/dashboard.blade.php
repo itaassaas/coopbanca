@@ -110,6 +110,30 @@
         </div>
       @endif
 
+
+
+
+      <!-- Add this after the balance display and before the withdraw button -->
+
+        @if($user->withdraws->where('motivo_rechazo', '!=', null)->count() > 0)
+            <div class="alert alert-warning mt-3" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <div>
+                        <strong>Novedades:</strong>
+                        <div class="mt-2">
+                            @foreach($user->withdraws->where('motivo_rechazo', '!=', null) as $withdraw)
+                                <div class="border-start border-warning ps-3 mb-2">
+                                    <small class="d-block text-muted">{{ $withdraw->created_at->format('d/m/Y H:i') }}</small>
+                                    {{ $withdraw->motivo_rechazo }}
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
       <div class="row row-deck row-cards mb-2">
 
         <div class="col-sm-6 col-md-6">
