@@ -115,15 +115,17 @@ class WithdrawController extends Controller
             $image = $request->file('comporbante');
             $fileName = time() . '_' . $txnid . '.' . $image->getClientOriginalExtension();
             
-              // Store file in public storage
-        $path = $request->file('comporbante')->storeAs(
-            'withdraws',
-            $fileName,
-            'public'
-        );
+            // Asegurar que el directorio existe
+            $path = public_path('assets/images');
+            if (!file_exists($path)) {
+                mkdir($path, 0775, true);
+            }
             
-        $newwithdraw = new Withdraw();
-        $newwithdraw->comporbante = $path;
+            // Mover el archivo a assets/images
+            $image->move($path, $fileName);
+            
+            // Guardar la ruta relativa en la base de datos
+            $newwithdraw->comporbante = 'assets/images/' . $fileName;
         }
 
         $newwithdraw['user_id'] = auth()->id();
