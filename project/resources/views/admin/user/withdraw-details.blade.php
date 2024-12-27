@@ -51,14 +51,16 @@
                                                     <tr>
                                                     <th>{{ __("Comprobante") }}</th>
                                                         <td>
-                                                            @if($withdraw->comporbante)
+                                                            @if($withdraw->comporbante && Storage::disk('public')->exists($withdraw->comporbante))
                                                                 <div class="comprobante-preview">
-                                                                    <img src="{{ url('storage/' . $withdraw->comporbante) }}" 
+                                                                    <img src="{{ asset($withdraw->comporbante) }}" 
                                                                         alt="Comprobante de retiro" 
-                                                                        class="img-fluid" 
-                                                                        style="max-width: 200px; cursor: pointer;"
-                                                                        onclick="window.open(this.src)">
+                                                                        class="img-fluid"
+                                                                        style="max-width: 200px; cursor: pointer; transition: transform 0.3s;"
+                                                                        onclick="window.open(this.src, '_blank')"
+                                                                        onerror="this.onerror=null; this.src='{{ asset('assets/images/noimage.jpg') }}';">
                                                                 </div>
+                                                                <small class="text-muted d-block mt-1">Click para ampliar</small>
                                                             @else
                                                                 <span class="text-muted">{{ __("No disponible") }}</span>
                                                             @endif
