@@ -144,7 +144,10 @@
                     <i class="fas fa-wallet"></i>
                   </div>
                   <div class="content">
-                  <div class="h1 mb-0 mt-2">
+                    <div class="subheader">{{__('Account Number')}}</div>
+                    <div class="h1 mb-0 mt-2">{{ $user->account_number }}</div>
+                    
+                    <div class="h1 mb-0 mt-2">
                       @if($user->kyc_status == 1)
                           <span class="badge badge-success">
                               <i class="fas fa-check-circle"></i> Perfil Verificado 
@@ -159,8 +162,8 @@
                           </span>
                       @endif
                     </div>
-                    <div class="subheader">{{__('Account Number')}}</div>
-                    <div class="h1 mb-0 mt-2">{{ $user->account_number }}</div>
+
+
                   </div>
                 </div>
               </div>
