@@ -48,7 +48,22 @@
                                                         <th>{{ __("Withdraw Method") }}</th>
                                                         <td>{{$withdraw->method}}</td>
                                                     </tr>
-                                                    
+                                                    <tr>
+                                                        <th>{{ __("Comprobante") }}</th>
+                                                        <td>
+                                                            @if($withdraw->comporbante)
+                                                                <div class="comprobante-preview">
+                                                                    <img src="{{ asset($withdraw->comporbante) }}" 
+                                                                        alt="Comprobante de retiro" 
+                                                                        class="img-fluid" 
+                                                                        style="max-width: 200px; cursor: pointer;"
+                                                                        onclick="window.open(this.src)">
+                                                                </div>
+                                                            @else
+                                                                <span class="text-muted">{{ __("No disponible") }}</span>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
                                                     <tr>
                                                         <th>{{ __("Withdraw Account Details") }}</th>
                                                         <td>{{$withdraw->details}}</td>
