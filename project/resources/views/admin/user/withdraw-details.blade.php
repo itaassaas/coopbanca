@@ -53,15 +53,17 @@ use Illuminate\Support\Facades\Storage;
                                                         <th>{{ __("Withdraw Method") }}</th>
                                                         <td>{{$withdraw->method}}</td>
                                                     </tr>
+                                                   
                                                     <tr>
                                                         <th>{{ __("Comprobante") }}</th>
                                                         <td>
                                                             @if($withdraw->comporbante)
                                                                 <div class="comprobante-preview">
                                                                     @php
-                                                                        $imageUrl = 'withdraws/' . basename($withdraw->comporbante);
+                                                                        // Ajustar la ruta para que coincida con la estructura real
+                                                                        $imageUrl = str_replace('storage/app/public/', '', $withdraw->comporbante);
                                                                     @endphp
-                                                                    <img src="{{ asset('storage/' . $imageUrl) }}"
+                                                                    <img src="{{ Storage::disk('public')->url($imageUrl) }}"
                                                                         alt="Comprobante de retiro" 
                                                                         class="img-fluid"
                                                                         style="max-width: 200px; cursor: pointer; transition: transform 0.3s;"
@@ -73,7 +75,8 @@ use Illuminate\Support\Facades\Storage;
                                                                 <span class="text-muted">{{ __("No disponible") }}</span>
                                                             @endif
                                                         </td>
-                                                    </tr>
+</tr>
+
                                                     <tr>
                                                         <th>{{ __("Withdraw Account Details") }}</th>
                                                         <td>{{$withdraw->details}}</td>
