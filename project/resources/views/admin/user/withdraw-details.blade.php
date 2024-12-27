@@ -61,7 +61,7 @@ use Illuminate\Support\Facades\Storage;
                                                                 <div class="comprobante-preview">
                                                                     @php
                                                                         // Ajustar la ruta para que coincida con la estructura real
-                                                                        $imageUrl = str_replace('storage/app/public/', '', $withdraw->comporbante);
+                                                                        $imageUrl = str_replace('storage/app/public', '', $withdraw->comporbante);
                                                                     @endphp
                                                                     <img src="{{ Storage::disk('public')->url($imageUrl) }}"
                                                                         alt="Comprobante de retiro" 
