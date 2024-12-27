@@ -58,8 +58,7 @@
                         <div class="form-group">
                             <label class="font-weight-bold">{{ __('Comprobante') }}</label>
                             <div class="comprobante-preview">
-                                <img src="{{ asset($withdraw->comporbante) }}" alt="Comprobante" class="img-fluid" style="max-width: 100%; height: auto;">
-                            </div>
+                            <img src="{{ isset($withdraw) ? asset($withdraw->comporbante) : '' }}" alt="Comprobante" class="img-fluid" style="max-width: 100%; height: auto;">                            </div>
                         </div>
             </div>
             <div class="modal-footer">
