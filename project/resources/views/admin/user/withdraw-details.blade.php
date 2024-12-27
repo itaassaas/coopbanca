@@ -59,13 +59,13 @@ use Illuminate\Support\Facades\Storage;
                                                             @if($withdraw->comporbante)
                                                                 <div class="comprobante-preview">
                                                                     @php
-                                                                        // Remove storage/ prefix if exists since asset() handles it
-                                                                        $imageUrl = str_replace('storage/', '', $withdraw->comporbante);
+                                                                        $imageUrl = 'withdraws/' . basename($withdraw->comporbante);
                                                                     @endphp
-                                                                    <img src="{{ Storage::disk('public')->exists($imageUrl) ? Storage::url($imageUrl) : asset('assets/images/noimage.jpg') }}"
+                                                                    <img src="{{ asset('storage/' . $imageUrl) }}"
                                                                         alt="Comprobante de retiro" 
                                                                         class="img-fluid"
                                                                         style="max-width: 200px; cursor: pointer; transition: transform 0.3s;"
+                                                                        onerror="this.onerror=null; this.src='{{ asset('assets/images/noimage.jpg') }}'"
                                                                         onclick="window.open(this.src, '_blank')">
                                                                 </div>
                                                                 <small class="text-muted d-block mt-1">Click para ampliar</small>
