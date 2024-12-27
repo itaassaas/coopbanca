@@ -29,8 +29,9 @@
                 <tr>
                     <th>{{ __("Name") }}</th>
                     <th>{{ __("Email") }}</th>
-                    <th>{{__('status')}}</th>
                     <th>{{__('balance')}}</th>
+                    <th>{{__('status')}}</th>
+                    
                     <th>{{ __("Options") }}</th>
                 </tr>
               </thead>
@@ -175,8 +176,8 @@
                columns: [
                         { data: 'name', name: 'name' },
                         { data: 'email', name: 'email' },
-                        { data: 'status',searchable: false, orderable: false},
                         { data: 'balance',searchable: false, orderable: false},
+                        { data: 'status',searchable: false, orderable: false},
             			{ data: 'action', searchable: false, orderable: false }
                      ],
                 language : {
