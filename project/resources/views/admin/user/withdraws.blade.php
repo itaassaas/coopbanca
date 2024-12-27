@@ -172,25 +172,7 @@ var table = $('#geniustable').DataTable({
       });
     })
 
-    $('#reject-form').on('submit', function(e) {
-    e.preventDefault();
-    var withdrawId = $(this).data('id'); // Obtener el ID del atributo data
     
-    $.ajax({
-        type: 'POST',
-        url: '{{route("admin.withdraw.reject")}}/' + withdrawId,
-        data: {
-            _token: '{{csrf_token()}}',
-            motivo_rechazo: $('#motivo_rechazo').val()
-        },
-        success: function(response) {
-            // Manejar respuesta exitosa
-            $('#modal').modal('hide');
-            window.location.reload();
-        }
-    });
-});
-
 
 abstract
 </script>
