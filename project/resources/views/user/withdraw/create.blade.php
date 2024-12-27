@@ -55,6 +55,40 @@
                                     <textarea name="details" class="form-control nic-edit" cols="30" rows="5" placeholder="{{__('Receive account details')}}" required></textarea>
                                 </div>
 
+
+                <!-- Nuevo campo para comprobante -->
+                <div class="form-group mb-3">
+                    <label class="form-label required">{{__('Comprobante de Pago')}}</label>
+                    <input type="file" 
+                        name="comprobante" 
+                        class="form-control" 
+                        accept="image/*"
+                        required 
+                        onchange="mostrarPreview(this)">
+                    <small class="text-muted">Formatos permitidos: JPG, PNG, GIF</small>
+                </div>
+
+                <!-- Preview del comprobante -->
+                <div class="form-group mb-3" id="previewContainer" style="display:none;">
+                    <img id="previewImage" src="#" alt="Vista previa" class="img-fluid" style="max-height: 200px;">
+                </div>
+
+                <script>
+                function mostrarPreview(input) {
+                    const preview = document.getElementById('previewImage');
+                    const container = document.getElementById('previewContainer');
+
+                    if (input.files && input.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            preview.src = e.target.result;
+                            container.style.display = 'block';
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+                </script>
+
                                 <div class="form-footer">
                                     <button type="submit" class="btn btn-primary w-100">{{__('Submit')}}</button>
                                 </div>
