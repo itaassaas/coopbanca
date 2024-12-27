@@ -173,5 +173,54 @@ var table = $('#geniustable').DataTable({
 abstract
 </script>
 
+<script>
+$(document).ready(function() {
+    // Store the URL when modal opens
+    $('#confirm-delete').on('show.bs.modal', function(e) {
+        $(this).find('.btn-ok').attr('data-href', $(e.relatedTarget).data('href'));
+    });
+
+    // Handle reject button click
+    $('.btn-ok').on('click', function(e) {
+        e.preventDefault();
+        var $this = $(this);
+        var url = $this.data('href');
+        var motivo = $('#motivo_rechazo').val();
+
+        if (!motivo) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Debe especificar un motivo de rechazo'
+            });
+            return;
+        }
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                motivo_rechazo: motivo,
+                status: 2 // rejection status
+            },
+            success: function(response) {
+                if (response.success) {
+                    $('#confirm-delete').modal('hide');
+                    window.location.reload();
+                }
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un error al procesar su solicitud'
+                });
+            }
+        });
+    });
+});
+</script>
+
 @endsection
 
