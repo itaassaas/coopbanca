@@ -413,28 +413,39 @@
 
 <script>
 function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        // Usar toastr para notificación elegante
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "2000"
-        };
-        toastr.success("Número de cuenta copiado");
-        
-        // Efecto visual en el botón
-        const btn = event.currentTarget;
-        btn.innerHTML = '<i class="fas fa-check"></i>';
-        btn.classList.add('btn-success');
-        
-        setTimeout(() => {
-            btn.innerHTML = '<i class="fas fa-copy"></i>';
-            btn.classList.remove('btn-success');
-        }, 1000);
-    }).catch(() => {
+    try {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                // Configura toastr
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "positionClass": "toast-top-right",
+                    "timeOut": "2000",
+                    "preventDuplicates": true // Previene toasts duplicados
+                };
+                
+                // Limpia toasts anteriores
+                toastr.clear();
+                
+                // Muestra el toast de éxito
+                toastr.success("Copiado al portapapeles");
+                
+                // Efecto en el botón
+                const btn = event.currentTarget;
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-copy"></i>';
+                }, 1000);
+            })
+            .catch(() => {
+                toastr.clear();
+                toastr.error("No se pudo copiar al portapapeles");
+            });
+    } catch (err) {
+        toastr.clear();
         toastr.error("Error al copiar");
-    });
+    }
 }
 </script>
 
