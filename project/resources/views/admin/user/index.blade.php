@@ -30,6 +30,7 @@
                     <th>{{ __("Name") }}</th>
                     <th>{{ __("Email") }}</th>
                     <th>{{__('status')}}</th>
+                    <th>{{__('balance')}}</th>
                     <th>{{ __("Options") }}</th>
                 </tr>
               </thead>
