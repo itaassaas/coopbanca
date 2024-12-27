@@ -45,6 +45,11 @@ class WithdrawController extends Controller
             'comporbante' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Create storage directory if it doesn't exist
+        if (!Storage::disk('public')->exists('withdraws')) {
+            Storage::disk('public')->makeDirectory('withdraws');
+        }
+
         $user = auth()->user();
 
         if($user->bank_plan_id === null){
@@ -110,14 +115,15 @@ class WithdrawController extends Controller
             $image = $request->file('comporbante');
             $fileName = time() . '_' . $txnid . '.' . $image->getClientOriginalExtension();
             
-            // Store in public disk
-            $path = Storage::disk('public')->putFileAs(
-                'withdraws',
-                $image,
-                $fileName
-            );
+              // Store file in public storage
+        $path = $request->file('comporbante')->storeAs(
+            'withdraws',
+            $fileName,
+            'public'
+        );
             
-            $newwithdraw->comporbante = 'storage/' . $path;
+        $newwithdraw = new Withdraw();
+        $newwithdraw->comporbante = $path;
         }
 
         $newwithdraw['user_id'] = auth()->id();

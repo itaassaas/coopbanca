@@ -54,29 +54,26 @@ use Illuminate\Support\Facades\Storage;
                                                         <td>{{$withdraw->method}}</td>
                                                     </tr>
                                                     <tr>
-                                                            <th>{{ __("Comprobante") }}</th>
-                                                            <td>
-                                                                @if($withdraw->comporbante)
-                                                                    <div class="comprobante-preview">
-                                                                        @php
-                                                                            $imageUrl = str_replace('public/', 'storage/', $withdraw->comporbante);
-                                                                        @endphp
-                                                                        <img src="{{ asset($imageUrl) }}" 
-                                                                            alt="Comprobante de retiro" 
-                                                                            class="img-fluid"
-                                                                            style="max-width: 200px; cursor: pointer; transition: transform 0.3s;"
-                                                                            onclick="window.open(this.src, '_blank')"
-                                                                            onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-                                                                        <div class="text-muted" style="display:none">
-                                                                            {{ __("Error al cargar imagen") }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <small class="text-muted d-block mt-1">Click para ampliar</small>
-                                                                @else
-                                                                    <span class="text-muted">{{ __("No disponible") }}</span>
-                                                                @endif
-                                                            </td>
-                                                        </tr>
+                                                        <th>{{ __("Comprobante") }}</th>
+                                                        <td>
+                                                            @if($withdraw->comporbante)
+                                                                <div class="comprobante-preview">
+                                                                    @php
+                                                                        // Remove storage/ prefix if exists since asset() handles it
+                                                                        $imageUrl = str_replace('storage/', '', $withdraw->comporbante);
+                                                                    @endphp
+                                                                    <img src="{{ Storage::disk('public')->exists($imageUrl) ? Storage::url($imageUrl) : asset('assets/images/noimage.jpg') }}"
+                                                                        alt="Comprobante de retiro" 
+                                                                        class="img-fluid"
+                                                                        style="max-width: 200px; cursor: pointer; transition: transform 0.3s;"
+                                                                        onclick="window.open(this.src, '_blank')">
+                                                                </div>
+                                                                <small class="text-muted d-block mt-1">Click para ampliar</small>
+                                                            @else
+                                                                <span class="text-muted">{{ __("No disponible") }}</span>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
                                                     <tr>
                                                         <th>{{ __("Withdraw Account Details") }}</th>
                                                         <td>{{$withdraw->details}}</td>
