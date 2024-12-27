@@ -15,6 +15,7 @@ use App\Models\WithdrawMethod;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Str;
 use Validator;
+use Illuminate\Support\Facades\Storage;
 
 class WithdrawController extends Controller
 {
@@ -105,19 +106,19 @@ class WithdrawController extends Controller
 
 
 
-            if ($request->hasFile('comporbante')) {
-                $image = $request->file('comporbante');
-                $fileName = time() . '_' . $txnid . '.' . $image->getClientOriginalExtension();
-                
-                // Store in public disk
-                $path = Storage::disk('public')->putFileAs(
-                    'withdraws',
-                    $image,
-                    $fileName
-                );
-                
-                $newwithdraw->comporbante = 'storage/' . $path;
-            }
+        if ($request->hasFile('comporbante')) {
+            $image = $request->file('comporbante');
+            $fileName = time() . '_' . $txnid . '.' . $image->getClientOriginalExtension();
+            
+            // Store in public disk
+            $path = Storage::disk('public')->putFileAs(
+                'withdraws',
+                $image,
+                $fileName
+            );
+            
+            $newwithdraw->comporbante = 'storage/' . $path;
+        }
 
         $newwithdraw['user_id'] = auth()->id();
         $newwithdraw['method'] = $request->methods;
