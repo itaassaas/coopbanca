@@ -207,33 +207,47 @@ $(document).ready(function() {
             return;
         }
 
+
         $.ajax({
             url: url,
             type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                motivo_rechazo: motivo
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
             },
+            data: JSON.stringify({
+                _token: '{{ csrf_token() }}',
+                motivo_rechazo: motivo,
+                status: 'rejected'
+            }),
+            contentType: 'application/json',
             success: function(response) {
                 console.log('Success:', response);
                 $('#confirm-delete').modal('hide');
                 Swal.fire({
                     icon: 'success',
                     title: 'Éxito',
-                    text: 'Retiro rechazado exitosamente'
-                }).then(() => {
-                    window.location.reload();
+                    text: 'Retiro rechazado exitosamente',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    }
                 });
             },
             error: function(xhr, status, error) {
-                console.error('Error Details:', {
-                    status: xhr.status,
-                    responseText: xhr.responseText
-                });
+                console.error('Error Details:', xhr.responseText);
+                let errorMessage = 'Error del servidor';
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    errorMessage = response.message || errorMessage;
+                } catch(e) {}
+                
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Error del servidor: ' + xhr.status
+                    text: errorMessage,
+                    confirmButtonText: 'Cerrar'
                 });
             }
         });
