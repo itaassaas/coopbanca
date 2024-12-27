@@ -235,7 +235,7 @@ class UserController extends Controller
          \Log::info('Motivo rechazo: ' . request('motivo_rechazo'));
     
         $data['status'] = "rejected";
-        $data['motivo_rechazo'] = request('motivo_rechazo');
+        $data['motivo_rechazo'] = 'Rechazado por el administrador: ' . request('motivo_rechazo');
         $withdraw->update($data);
 
         $msg = __('Withdraw Rejected Successfully.');
