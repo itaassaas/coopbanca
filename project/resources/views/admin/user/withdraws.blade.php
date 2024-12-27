@@ -177,17 +177,17 @@ var table = $('#geniustable').DataTable({
     e.preventDefault();
     var motivo = $('#motivo_rechazo').val();
     
-    $.ajax({
-        url: $(this).attr('action'),
-        method: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}',
-            motivo_rechazo: motivo
-        },
-        success: function(response) {
-            // manejar respuesta
-        }
-    });
+            $.ajax({
+            type: 'POST',
+            url: '{{route("admin.withdraw.reject", $withdraw->id)}}',
+            data: {
+                _token: '{{csrf_token()}}',
+                motivo_rechazo: $('#motivo_rechazo').val()
+            },
+            success: function(response) {
+                // ...
+            }
+            });
 });
 
 abstract
