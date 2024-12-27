@@ -190,6 +190,9 @@ $(document).ready(function() {
         var url = $this.data('href');
         var motivo = $('#motivo_rechazo').val();
 
+        console.log('URL:', url); // Debug log
+        console.log('Motivo:', motivo); // Debug log
+
         if (!motivo) {
             Swal.fire({
                 icon: 'error',
@@ -199,30 +202,38 @@ $(document).ready(function() {
             return;
         }
 
+        // Create form data
+        var formData = new FormData();
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('motivo_rechazo', motivo);
+        formData.append('status', 2);
+
         $.ajax({
             url: url,
-            type: 'GET', // Cambiar a GET temporalmente
-            data: {
-                _token: '{{ csrf_token() }}',
-                motivo_rechazo: motivo,
-                status: 2
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             success: function(response) {
-                if (response.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Éxito',
-                        text: 'Retiro rechazado exitosamente'
-                    }).then(() => {
-                        window.location.reload();
-                    });
-                }
+                console.log('Response:', response); // Debug log
+                $('#confirm-delete').modal('hide');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: 'Retiro rechazado exitosamente'
+                }).then(() => {
+                    window.location.reload();
+                });
             },
-            error: function(xhr) {
+            error: function(xhr, status, error) {
+                console.error('Error:', xhr.responseText); // Debug log
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Error al procesar la solicitud'
+                    text: 'Error al procesar la solicitud: ' + error
                 });
             }
         });
