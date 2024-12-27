@@ -177,8 +177,16 @@ abstract
 </script>
 
 
-<!-- Modificar el script existente -->
+
+<!-- Remove or comment out the 'abstract' line -->
 <script>
+$(document).on('click', '#applicationDetails', function () {
+    let detailsUrl = $(this).data('href');
+    $.get(detailsUrl, function( data ) {
+        $( "#details .modal-body" ).html( data );
+    });
+});
+
 $(document).ready(function() {
     $('#confirm-delete').on('show.bs.modal', function(e) {
         $(this).find('.btn-ok').attr('data-href', $(e.relatedTarget).data('href'));
@@ -190,9 +198,6 @@ $(document).ready(function() {
         var url = $this.data('href');
         var motivo = $('#motivo_rechazo').val();
 
-        console.log('URL:', url); // Debug log
-        console.log('Motivo:', motivo); // Debug log
-
         if (!motivo) {
             Swal.fire({
                 icon: 'error',
@@ -202,23 +207,15 @@ $(document).ready(function() {
             return;
         }
 
-        // Create form data
-        var formData = new FormData();
-        formData.append('_token', '{{ csrf_token() }}');
-        formData.append('motivo_rechazo', motivo);
-        formData.append('status', 2);
-
         $.ajax({
             url: url,
             type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            data: {
+                _token: '{{ csrf_token() }}',
+                motivo_rechazo: motivo
             },
             success: function(response) {
-                console.log('Response:', response); // Debug log
+                console.log('Success:', response);
                 $('#confirm-delete').modal('hide');
                 Swal.fire({
                     icon: 'success',
@@ -229,11 +226,14 @@ $(document).ready(function() {
                 });
             },
             error: function(xhr, status, error) {
-                console.error('Error:', xhr.responseText); // Debug log
+                console.error('Error Details:', {
+                    status: xhr.status,
+                    responseText: xhr.responseText
+                });
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Error al procesar la solicitud: ' + error
+                    text: 'Error del servidor: ' + xhr.status
                 });
             }
         });
