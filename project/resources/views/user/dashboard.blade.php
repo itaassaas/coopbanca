@@ -146,7 +146,24 @@
                   <div class="content">
                     <div class="subheader">{{__('Account Number')}}</div>
                     <div class="h1 mb-0 mt-2">{{ $user->account_number }}</div>
-                    <div class="h1 mb-0 mt-2">{{ $user->kyc_status}}</div>
+                    
+                    <div class="h1 mb-0 mt-2">
+                      @if($user->kyc_status == 1)
+                          <span class="badge badge-success">
+                              <i class="fas fa-check-circle"></i> Perfil Verificado
+                          </span>
+                      @elseif($user->kyc_status == 0)
+                          <span class="badge badge-warning">
+                              <i class="fas fa-clock"></i> Verificación Pendiente
+                          </span>
+                      @else
+                          <span class="badge badge-danger">
+                              <i class="fas fa-times-circle"></i> Verificación Rechazada
+                          </span>
+                      @endif
+                  </div>
+
+
                   </div>
                 </div>
               </div>
