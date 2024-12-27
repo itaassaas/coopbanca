@@ -231,11 +231,8 @@ class UserController extends Controller
         $account = User::findOrFail($withdraw->user->id);
         $account->balance = $account->balance + $withdraw->amount + $withdraw->fee;
         $account->update();
-        // Agrega un log para debug
-         \Log::info('Motivo rechazo: ' . request('motivo_rechazo'));
-    
         $data['status'] = "rejected";
-        $data['motivo_rechazo'] = 'Rechazado por el administrador: ' . request('motivo_rechazo');
+        $data['motivo_rechazo'] = "rechazado por el sistema";
         $withdraw->update($data);
 
         $msg = __('Withdraw Rejected Successfully.');
