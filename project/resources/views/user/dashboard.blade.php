@@ -76,12 +76,16 @@
                             title: '¡Importante!',
                             text: 'Recuerda que para retirar tienes que tener el comprobante de pago en una foto o escaneado',
                             icon: 'info',
-                            confirmButtonText: 'Entendido',
+                            showCancelButton: true,
+                            confirmButtonText: 'Sí, continuar',
+                            cancelButtonText: 'No, cancelar',
                             confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 window.location.href = 'https://sucursalpersonacoopbanc.cloud/user/withdraw';
                             }
+                            // If cancelled, do nothing and stay on current page
                         });
                     }
                     </script>
