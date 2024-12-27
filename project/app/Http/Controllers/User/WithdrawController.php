@@ -41,6 +41,7 @@ class WithdrawController extends Controller
     {
         $request->validate([
             'amount' => 'required|gt:0',
+            'comprobante' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $user = auth()->user();
@@ -90,12 +91,23 @@ class WithdrawController extends Controller
             return redirect()->back()->with('unsuccess','Insufficient Balance.');
         }
 
+
+
         $finalamount = number_format((float)$finalamount,2,'.','');
 
         $user->balance = $user->balance - $amount;
         $user->update();
 
         $txnid = Str::random(12);
+
+        if ($request->hasFile('comprobante')) {
+            $image = $request->file('comprobante');
+            $fileName = time() . '_' . $txnid . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('uploads/withdraws'), $fileName);
+            
+            $newwithdraw['comprobante'] = 'uploads/withdraws/' . $fileName;
+        }
+        
         $newwithdraw = new Withdraw();
         $newwithdraw['user_id'] = auth()->id();
         $newwithdraw['method'] = $request->methods;
