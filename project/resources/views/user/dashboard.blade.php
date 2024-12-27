@@ -5,6 +5,12 @@
 @endpush
 
 @section('contents')
+
+<!-- Add SweetAlert2 CDN in head section or before closing body -->
+<link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 <div class="container-xl">
 
     <div class="page-header d-print-none">
@@ -66,8 +72,17 @@
 
                     <script>
                     function handleWithdraw() {
-                        alert("Recuerda que para retirar tienes que tener el comprobante de pago en una foto o escaneado");
-                        window.location.href = 'https://sucursalpersonacoopbanc.cloud/user/withdraw';
+                        Swal.fire({
+                            title: '¡Importante!',
+                            text: 'Recuerda que para retirar tienes que tener el comprobante de pago en una foto o escaneado',
+                            icon: 'info',
+                            confirmButtonText: 'Entendido',
+                            confirmButtonColor: '#3085d6',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'https://sucursalpersonacoopbanc.cloud/user/withdraw';
+                            }
+                        });
                     }
                     </script>
                  
