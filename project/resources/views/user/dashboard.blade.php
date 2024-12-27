@@ -1,6 +1,9 @@
 @extends('layouts.user')
 
+
 @push('css')
+
+
 
 <style>
 .install-banner {
@@ -32,6 +35,9 @@
 <!-- Add SweetAlert2 CDN in head section or before closing body -->
 <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- En el head de tu layout -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
     <div class="container-xl">
@@ -402,23 +408,36 @@
         alert('copied');
     }
     </script>
-@endpush
 
-@push('scripts')
+
+
 <script>
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
-        // Show tooltip feedback
-        $('.tooltip').text('¡Copiado!');
+        // Usar toastr para notificación elegante
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "2000"
+        };
+        toastr.success("Número de cuenta copiado");
+        
+        // Efecto visual en el botón
+        const btn = event.currentTarget;
+        btn.innerHTML = '<i class="fas fa-check"></i>';
+        btn.classList.add('btn-success');
+        
         setTimeout(() => {
-            $('.tooltip').text('Copiar');
+            btn.innerHTML = '<i class="fas fa-copy"></i>';
+            btn.classList.remove('btn-success');
         }, 1000);
+    }).catch(() => {
+        toastr.error("Error al copiar");
     });
 }
-
-// Initialize tooltips
-$(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();
-});
 </script>
+
+
 @endpush
+
