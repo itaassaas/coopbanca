@@ -190,8 +190,7 @@ var table = $('#geniustable').DataTable({
         }
     });
 });
-// En el JavaScript
-url: '{{url("admin/withdraw/reject")}}/' + withdrawId,
+
 
 abstract
 </script>
