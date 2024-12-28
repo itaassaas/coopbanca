@@ -18,7 +18,11 @@ use App\Models\Withdraw;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Models\Admin;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Currency;
+use App\Notifications\BalanceNotification;
+use App\Notifications\AdminBalanceNotification;
+
+use Illuminate\Support\Facades\Notification;
 
 class UserController extends Controller
 {
