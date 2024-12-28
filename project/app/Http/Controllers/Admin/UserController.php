@@ -17,6 +17,8 @@ use App\Models\Wishlist;
 use App\Models\Withdraw;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Models\Admin;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -133,47 +135,46 @@ class UserController extends Controller
 
      
         public function adddeduct(Request $request)
-        {
-            $user = User::whereId($request->user_id)->first();
-            $admin = Admin::first(); // Get admin user
-        
-            if($user){
-                if($request->type == 'add'){
-                    $user->increment('balance',$request->amount);
+                {
+                    $user = User::findOrFail($request->user_id);
+                    $admin = Admin::first();
                     
-                    // Send email to user
-                    Mail::send('emails.balance_added', [
-                        'user' => $user,
-                        'amount' => $request->amount,
-                        'currency' => $this->curr->name
-                    ], function($message) use ($user) {
-                        $message->to($user->email)
-                                ->subject('Balance Added to Your Account');
-                    });
-        
-                    // Send email to admin
-                    Mail::send('emails.admin_balance_added', [
-                        'user' => $user,
-                        'amount' => $request->amount,
-                        'currency' => $this->curr->name
-                    ], function($message) use ($admin) {
-                        $message->to($admin->email)
-                                ->subject('Balance Added to User Account');
-                    });
-        
-                    return redirect()->back()->with('message','User balance added and notifications sent');
-                } else {
-                    if($user->balance >= $request->amount){
-                        $user->decrement('balance',$request->amount);
-                        return redirect()->back()->with('message','User balance deduct!');
-                    } else {
-                        return redirect()->back()->with('warning','User don,t have sufficient balance!');
+                    if($request->type == 'add') {
+                        $user->increment('balance', $request->amount);
+                        
+                        // Email al usuario
+                        Mail::send('emails.balance_added', [
+                            'user' => $user,
+                            'amount' => $request->amount,
+                            'currency' => $this->curr->name
+                        ], function($message) use ($user) {
+                            $message->to($user->email)
+                                    ->subject('Saldo agregado a su cuenta');
+                        });
+
+                        // Email al admin
+                        Mail::send('emails.admin_balance_added', [
+                            'user' => $user,
+                            'amount' => $request->amount,
+                            'currency' => $this->curr->name
+                        ], function($message) use ($admin) {
+                            $message->to($admin->email)
+                                    ->subject('Saldo agregado a cuenta de usuario');
+                        });
+
+                        return redirect()->back()->with('message', 'Saldo agregado y notificaciones enviadas');
+                    } 
+                    
+                    // Deducir saldo
+                    if($user->balance < $request->amount) {
+                        return redirect()->back()->with('warning', 'Saldo insuficiente');
                     }
+                    
+                    $user->decrement('balance', $request->amount);
+                    return redirect()->back()->with('message', 'Saldo deducido correctamente');
                 }
-            } else {
-                return redirect()->back()->with('warning','User not found!');
-            }
-        }
+
+
 
         public function withdraws(){
             return view('admin.user.withdraws');

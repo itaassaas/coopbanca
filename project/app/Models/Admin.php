@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable; // Agregar este use
+
 
 class Admin extends Authenticatable
 {
+    use Notifiable; // Agregar este trait
     protected $guard = 'admin';
 
     protected $fillable = [
@@ -15,6 +18,12 @@ class Admin extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    // Agregar este método aquí, justo después de $hidden
+    public static function getAdminEmail()
+    {
+        return self::first()->email;
+    }
 
 
     public function IsSuper(){
