@@ -19,15 +19,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Mail;
-use App\Models\Currency; // Add this
 
 class UserController extends Controller
 {
-    private $curr;
     public function __construct()
         {
             $this->middleware('auth:admin');
-            $this->curr = Currency::where('is_default', '=', 1)->first();
         }
 
         public function datatables()
@@ -136,47 +133,57 @@ class UserController extends Controller
             return response()->json($msg);
         }
 
-        
      
-        public function adddeduct(Request $request)
-    {
-        $user = User::findOrFail($request->user_id);
-        $admin = Admin::first();
         
-        if($request->type == 'add') {
-            $user->increment('balance', $request->amount);
-            
-            // Email al usuario
-            Mail::send('emails.balance_added', [
-                'user' => $user,
-                'amount' => $request->amount,
-                'currency' => $this->curr ? $this->curr->name : 'USD'
-            ], function($message) use ($user) {
-                $message->to($user->email)
-                        ->subject('Saldo agregado a su cuenta');
-            });
-
-            // Email al admin
-            Mail::send('emails.admin_balance_added', [
-                'user' => $user,
-                'amount' => $request->amount,
-                'currency' => $this->curr ? $this->curr->name : 'USD'
-            ], function($message) use ($admin) {
-                $message->to($admin->email)
-                        ->subject('Saldo agregado a cuenta de usuario');
-            });
-
-            return redirect()->back()->with('message', 'Saldo agregado y notificaciones enviadas');
-        }
+        public function adddeduct(Request $request)
+        {
+            try {
+                $user = User::findOrFail($request->user_id);
+                $admin = Admin::first();
+                $curr = Currency::where('is_default', '=', 1)->first();
+                
+                if($request->type == 'add') {
+                    $user->increment('balance', $request->amount);
                     
-                    // Deducir saldo
+                    // Notification to user
+                    Notification::send($user, new BalanceNotification([
+                        'title' => 'Saldo Agregado',
+                        'body' => 'Se ha agregado ' . $request->amount . ' ' . $curr->name . ' a su cuenta.',
+                        'amount' => $request->amount,
+                        'type' => 'add'
+                    ]));
+        
+                    // Notification to admin
+                    Notification::send($admin, new AdminBalanceNotification([
+                        'title' => 'Saldo Agregado a Usuario',
+                        'body' => 'Se agregó saldo a: ' . $user->name,
+                        'amount' => $request->amount,
+                        'user' => $user->name,
+                        'type' => 'add'
+                    ]));
+        
+                    return redirect()->back()->with('message', 'Saldo agregado y notificaciones enviadas');
+                } else {
                     if($user->balance < $request->amount) {
                         return redirect()->back()->with('warning', 'Saldo insuficiente');
                     }
-                    
+        
                     $user->decrement('balance', $request->amount);
+                    
+                    // Notification for deduction
+                    Notification::send($user, new BalanceNotification([
+                        'title' => 'Saldo Deducido',
+                        'body' => 'Se ha deducido ' . $request->amount . ' ' . $curr->name . ' de su cuenta.',
+                        'amount' => $request->amount,
+                        'type' => 'deduct'
+                    ]));
+        
                     return redirect()->back()->with('message', 'Saldo deducido correctamente');
                 }
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Error al procesar la operación: ' . $e->getMessage());
+            }
+        }
 
 
 
