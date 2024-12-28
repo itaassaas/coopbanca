@@ -17,6 +17,12 @@ use App\Models\Wishlist;
 use App\Models\Withdraw;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Models\Admin;
+use App\Models\Currency;
+use App\Notifications\BalanceNotification;
+use App\Notifications\AdminBalanceNotification;
+
+use Illuminate\Support\Facades\Notification;
 
 class UserController extends Controller
 {
@@ -131,24 +137,59 @@ class UserController extends Controller
             return response()->json($msg);
         }
 
-        public function adddeduct(Request $request){
-            $user = User::whereId($request->user_id)->first();
-            if($user){
-                if($request->type == 'add'){
-                    $user->increment('balance',$request->amount);
-                    return redirect()->back()->with('message','User balance added');
-                }else{
-                    if($user->balance>=$request->amount){
-                        $user->decrement('balance',$request->amount);
-                        return redirect()->back()->with('message','User balance deduct!');
-                    }else{
-                        return redirect()->back()->with('warning','User don,t have sufficient balance!');
+     
+        
+        public function adddeduct(Request $request)
+        {
+            try {
+                $user = User::findOrFail($request->user_id);
+                $admin = Admin::first();
+                $curr = Currency::where('is_default', '=', 1)->first();
+                
+                if($request->type == 'add') {
+                    $user->increment('balance', $request->amount);
+                    
+                    // Notification to user
+                    Notification::send($user, new BalanceNotification([
+                        'title' => 'Saldo Agregado',
+                        'body' => 'Se ha agregado ' . $request->amount . ' ' . $curr->name . ' a su cuenta.',
+                        'amount' => $request->amount,
+                        'type' => 'add'
+                    ]));
+        
+                    // Notification to admin
+                    Notification::send($admin, new AdminBalanceNotification([
+                        'title' => 'Saldo Agregado a Usuario',
+                        'body' => 'Se agregó saldo a: ' . $user->name,
+                        'amount' => $request->amount,
+                        'user' => $user->name,
+                        'type' => 'add'
+                    ]));
+        
+                    return redirect()->back()->with('message', 'Saldo agregado y notificaciones enviadas');
+                } else {
+                    if($user->balance < $request->amount) {
+                        return redirect()->back()->with('warning', 'Saldo insuficiente');
                     }
+        
+                    $user->decrement('balance', $request->amount);
+                    
+                    // Notification for deduction
+                    Notification::send($user, new BalanceNotification([
+                        'title' => 'Saldo Deducido',
+                        'body' => 'Se ha deducido ' . $request->amount . ' ' . $curr->name . ' de su cuenta.',
+                        'amount' => $request->amount,
+                        'type' => 'deduct'
+                    ]));
+        
+                    return redirect()->back()->with('message', 'Saldo deducido correctamente');
                 }
-            }else{
-                return redirect()->back()->with('warning','User not found!');
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Error al procesar la operación: ' . $e->getMessage());
             }
         }
+
+
 
         public function withdraws(){
             return view('admin.user.withdraws');
