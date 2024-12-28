@@ -85,8 +85,17 @@
                 </div>
             </div>
             <div class="col-md-4 mx-auto mt-5">
-              <h3 class="card-title text-center"> <strong>@lang('Available Balance') : {{ $data->balance.$currency->name }}</strong></h3>
-              <form action="{{ route('admin.user.balance.add.deduct') }}" method="post">
+
+            <div class="d-flex justify-content-center align-items-center gap-2 py-3">
+                <h3 class="card-title mb-0 fw-bold">
+                    <span class="text-muted fs-6">@lang('Available Balance')</span>
+                    <div class="mt-1 text-primary fs-4">
+                        {{ $data->balance.$currency->name }}
+                    </div>
+                </h3>
+            </div>
+
+            <form action="{{ route('admin.user.balance.add.deduct') }}" method="post">
                 @csrf
                 <div class="form-group">
                   <label for="inp-address">{{ __('Amount') }}</label>
