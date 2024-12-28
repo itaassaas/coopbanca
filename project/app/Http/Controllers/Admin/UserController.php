@@ -131,21 +131,46 @@ class UserController extends Controller
             return response()->json($msg);
         }
 
-        public function adddeduct(Request $request){
+     
+        public function adddeduct(Request $request)
+        {
             $user = User::whereId($request->user_id)->first();
+            $admin = Admin::first(); // Get admin user
+        
             if($user){
                 if($request->type == 'add'){
                     $user->increment('balance',$request->amount);
-                    return redirect()->back()->with('message','User balance added');
-                }else{
-                    if($user->balance>=$request->amount){
+                    
+                    // Send email to user
+                    Mail::send('emails.balance_added', [
+                        'user' => $user,
+                        'amount' => $request->amount,
+                        'currency' => $this->curr->name
+                    ], function($message) use ($user) {
+                        $message->to($user->email)
+                                ->subject('Balance Added to Your Account');
+                    });
+        
+                    // Send email to admin
+                    Mail::send('emails.admin_balance_added', [
+                        'user' => $user,
+                        'amount' => $request->amount,
+                        'currency' => $this->curr->name
+                    ], function($message) use ($admin) {
+                        $message->to($admin->email)
+                                ->subject('Balance Added to User Account');
+                    });
+        
+                    return redirect()->back()->with('message','User balance added and notifications sent');
+                } else {
+                    if($user->balance >= $request->amount){
                         $user->decrement('balance',$request->amount);
                         return redirect()->back()->with('message','User balance deduct!');
-                    }else{
+                    } else {
                         return redirect()->back()->with('warning','User don,t have sufficient balance!');
                     }
                 }
-            }else{
+            } else {
                 return redirect()->back()->with('warning','User not found!');
             }
         }
