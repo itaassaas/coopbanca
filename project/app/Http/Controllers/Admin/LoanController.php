@@ -178,13 +178,17 @@ class LoanController extends Controller
       return response()->json($msg);
     }
 
-    public function show($id){
-      $data = UserLoan::findOrFail($id);
-      $data['requiredInformations'] = json_decode($data->required_information,true);
-      $data['data'] = $data;
-      $data['currency'] = Currency::whereIsDefault(1)->first();
-
-      return view('admin.loan.show',$data);
+    public function show($id)
+    {
+        $loan = UserLoan::findOrFail($id);
+        $requiredInformations = json_decode($loan->required_information, true);
+        $currency = Currency::whereIsDefault(1)->first();
+    
+        return view('admin.loan.show', compact(
+            'loan',
+            'requiredInformations',
+            'currency'
+        ));
     }
 
     public function logShow($id){
