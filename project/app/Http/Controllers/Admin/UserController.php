@@ -17,6 +17,8 @@ use App\Models\Wishlist;
 use App\Models\Withdraw;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Models\Transaction; // Agregar esta línea
+
 
 class UserController extends Controller
 {
