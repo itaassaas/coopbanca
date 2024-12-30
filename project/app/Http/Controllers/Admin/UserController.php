@@ -143,7 +143,7 @@ class UserController extends Controller
             $trans->email = $user->email;
             $trans->amount = $amount;
             $trans->type = "Deposit";
-            $trans->profit = "success";
+            $trans->profit = "plus";
             $trans->txnid = $this->generateUniqueTransactionId();
             $trans->user_id = $user->id;
             $trans->save();
