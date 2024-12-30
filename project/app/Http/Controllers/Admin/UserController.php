@@ -131,10 +131,31 @@ class UserController extends Controller
             return response()->json($msg);
         }
 
+
+        private function generateUniqueTransactionId() {
+            return 'TXN' . time() . rand(1000, 9999);
+        }
+        
+        public function createTransactionFromAdmin($user, $amount) {
+            $trans = new Transaction();
+            $trans->email = $user->email;
+            $trans->amount = $amount;
+            $trans->type = "Deposit";
+            $trans->profit = "minus";
+            $trans->txnid = $this->generateUniqueTransactionId();
+            $trans->user_id = $user->id;
+            $trans->save();
+            
+            return $trans;
+        }
+
         public function adddeduct(Request $request){
             $user = User::whereId($request->user_id)->first();
             if($user){
                 if($request->type == 'add'){
+                    // Create transaction record
+                     $this->createTransactionFromAdmin($user, $amount);
+    
                     $user->increment('balance',$request->amount);
                     return redirect()->back()->with('message','User balance added');
                 }else{

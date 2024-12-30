@@ -349,7 +349,6 @@
                       <th>@lang('Txnid')</th>
                       <th>@lang('Amount')</th>
                       <th>@lang('Date')</th>
-                      <th>@lang('Estado')</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -386,12 +385,7 @@
                             {{date('d M Y',strtotime($data->created_at))}}
                           </div>
                         </td>
-
-                        <td data-label="@lang('Txnid')">
-                          <div>
-                            {{ $data->status }}
-                          </div>
-                        </td>
+                        
                         
                       </tr>
                     @endforeach
