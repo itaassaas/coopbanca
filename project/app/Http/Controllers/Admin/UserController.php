@@ -154,7 +154,7 @@ class UserController extends Controller
             if($user){
                 if($request->type == 'add'){
                     // Create transaction record
-                     $this->createTransactionFromAdmin($user, $amount);
+                    $this->createTransactionFromAdmin($user, $request->amount);
     
                     $user->increment('balance',$request->amount);
                     return redirect()->back()->with('message','User balance added');
