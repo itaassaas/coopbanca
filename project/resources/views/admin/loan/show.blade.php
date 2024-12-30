@@ -24,26 +24,21 @@
                         </h4>
                     </div>
                     <div class="table-responsive-sm">
-                        <table class="table">
+                    <table class="table">
                             <tbody>
-
-                                @foreach ($requiredInformations as $key=>$value)
-                                    @if ($value[1] == 'file')
-                                    <tr>
-                                        <th width="45%">{{$key}}</th>
-                                        <td width="10%">:</td>
-                                        <td width="45%"><a href="{{asset('assets/images/'.$value[0])}}" download><img src="{{asset('assets/images/'.$value[0])}}" class="img-thumbnail"></a></td>
-                                    </tr>
-                                    @else 
+                                @if(!is_null($requiredInformations) && is_array($requiredInformations))
+                                    @foreach($requiredInformations as $key => $value)
                                         <tr>
-                                            <th width="45%">{{$key}}</th>
+                                            <th width="45%">{{ ucwords(str_replace('_',' ',$key)) }}</th>
                                             <td width="10%">:</td>
-                                            <td width="45%">{{ $value[0] }}</td>
+                                            <td width="45%">{{ $value }}</td>
                                         </tr>
-                                    @endif
-                                @endforeach
-
-
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="3" class="text-center">{{ __('No required information available') }}</td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
