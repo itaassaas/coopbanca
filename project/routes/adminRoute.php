@@ -411,7 +411,7 @@ Route::prefix('admin')->group(function(){
         Route::post('/staff/update/{id}', [StaffController::class,'update'])->name('admin.staff.update');
         Route::get('/staff/delete/{id}', [StaffController::class,'destroy'])->name('admin.staff.delete');
       });
-
+//aqui permisos
       Route::group(['middleware'=>'permissions:Manage KYC Form'],function(){
         Route::get('/manage-kyc/datatables', [KycManageController::class,'datatables'])->name('admin.manage.kyc.datatables');
         Route::get('/manage-kyc-form',[KycManageController::class,'index'])->name('admin.manage.kyc');
