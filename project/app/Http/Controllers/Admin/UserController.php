@@ -147,6 +147,8 @@ class UserController extends Controller
             $trans->txnid = $this->generateUniqueTransactionId();
             $trans->user_id = $user->id;
             $trans->save();
+
+
             
             return $trans;
         }
@@ -159,6 +161,16 @@ class UserController extends Controller
                     $this->createTransactionFromAdmin($user, $request->amount);
     
                     $user->increment('balance',$request->amount);
+                    $user->deposits()->create([
+                        'amount' => $request->amount,
+                        'method' => 'Admin Added',
+                        'txnid' => $this->generateUniqueTransactionId(),
+                        'status' => 'completed',
+                        'charge' => 0,
+                        'final_amo' => $request->amount,
+                        'message' => 'Admin Added',
+                        'user_id' => $user->id
+                    ]);
                     return redirect()->back()->with('message','User balance added');
                 }else{
                     if($user->balance>=$request->amount){
