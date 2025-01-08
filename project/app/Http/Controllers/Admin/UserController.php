@@ -165,7 +165,7 @@ class UserController extends Controller
                         'amount' => $request->amount,
                         'method' => 'Admin Added',
                         'txnid' => $this->generateUniqueTransactionId(),
-                        'status' => 'completed',
+                        'status' => 'complete',
                         'charge' => 0,
                         'final_amo' => $request->amount,
                         'message' => 'Admin Added',
