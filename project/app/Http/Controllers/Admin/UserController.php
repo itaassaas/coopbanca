@@ -164,7 +164,7 @@ class UserController extends Controller
                     $user->deposits()->create([
                         'amount' => $request->amount,
                         'method' => 'Admin Added',
-                        'txnid' =>  $trans->txnid,
+                        'txnid' => $this->generateUniqueTransactionId(),
                         'status' => 'complete',
                         'charge' => 0,
                         'final_amo' => $request->amount,
