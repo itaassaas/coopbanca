@@ -92,9 +92,9 @@
 
 
       </div>
-    <div class="page-header d-print-none">
+    <!-- <div class="page-header d-print-none">
 
-    </div>
+    </div> -->
   </div>
   <div class="page-body">
     <div class="container-xl">
@@ -287,7 +287,7 @@
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-4 mb-3">
+        <!-- <div class="col-sm-6 col-md-4 mb-3">
           <div class="card h-100 card--info-item">
             <div class="text-end icon">
               <i class="fas fa-wallet"></i>
@@ -297,9 +297,9 @@
               <div class="text-muted">@lang('DPS')</div>
             </div>
           </div>
-        </div>
+        </div> -->
 
-        <div class="col-sm-6 col-md-4 mb-3">
+        <!-- <div class="col-sm-6 col-md-4 mb-3">
           <div class="card h-100 card--info-item">
             <div class="text-end icon">
               <i class="far fa-credit-card"></i>
@@ -309,7 +309,7 @@
               <div class="text-muted">@lang('FDR')</div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <div class="row mb-3">
