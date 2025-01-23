@@ -332,21 +332,10 @@ class FrontendController extends Controller
     }
 
     function auth_guests(){
-        $chk = MarkuryPost::marcuryBase();
-        $chkData = MarkuryPost::marcurryBase();
-        $actual_path = str_replace('project','',base_path());
-        if ($chk != MarkuryPost::maarcuryBase()) {
-            if ($chkData < MarkuryPost::marrcuryBase()) {
-                if (is_dir($actual_path . '/install')) {
-                    header("Location: " . url('/install'));
-                    die();
-                } else {
-                    echo MarkuryPost::marcuryBasee();
-                    die();
-                }
-            }
-        }
+        // Bypass total: no realiza ninguna validación
+        return true;
     }
+    
 
     public function subscription(Request $request)
     {
