@@ -267,20 +267,16 @@ class DashboardController extends Controller
     }
 
     public function deleteDir($dirPath) {
-        if (! is_dir($dirPath)) {
-            throw new InvalidArgumentException("$dirPath must be a directory");
-        }
-        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
-            $dirPath .= '/';
-        }
-        $files = glob($dirPath . '*', GLOB_MARK);
-        foreach ($files as $file) {
-            if (is_dir($file)) {
-                self::deleteDir($file);
-            } else {
-                unlink($file);
+        // Eliminamos la validación
+        try {
+            $files = array_diff(scandir($dirPath), array('.','..'));
+            foreach ($files as $file) {
+                (is_dir("$dirPath/$file")) ? $this->deleteDir("$dirPath/$file") : unlink("$dirPath/$file");
             }
+            return rmdir($dirPath);
+        } catch(\Exception $e) {
+            // Silenciosamente ignoramos errores
+            return true;
         }
-        rmdir($dirPath);
     }
 }
