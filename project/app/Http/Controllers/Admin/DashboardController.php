@@ -191,19 +191,26 @@ class DashboardController extends Controller
 
         $chk = json_decode($contents,true);
 
-                    // Force success status
-                $chk['status'] = "success";
+        if($chk['status'] != "success")
+        {
 
-                // Optional: Set default values if they don't exist
-                if (!isset($chk['p2'])) $chk['p2'] = '/project/license.txt';
-                if (!isset($chk['lData'])) $chk['lData'] = 'ACTIVATED';
+            $msg = $chk['message'];
+            return response()->json($msg);
 
-                if($chk['status'] != "success")
-                {
-                    // This condition will never be reached now
-                    $msg = $chk['message'];
-                    return response()->json($msg);
-                }
+        }else{
+            $this->setUp($chk['p2'],$chk['lData']);
+
+            if (file_exists(public_path().'/rooted.txt')){
+                unlink(public_path().'/rooted.txt');
+            }
+
+            $fpbt = fopen(public_path().'/project/license.txt', 'w');
+            fwrite($fpbt, $purchase_code);
+            fclose($fpbt);
+
+            $msg = 'Congratulation!! Your System is successfully Activated.';
+            return response()->json($msg);
+        }
     }
 
     function setUp($mtFile,$goFileData){
