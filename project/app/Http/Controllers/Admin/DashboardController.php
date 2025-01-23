@@ -197,20 +197,21 @@ class DashboardController extends Controller
             $msg = $chk['message'];
             return response()->json($msg);
 
-        }else{
-            $this->setUp($chk['p2'],$chk['lData']);
-
-            if (file_exists(public_path().'/rooted.txt')){
-                unlink(public_path().'/rooted.txt');
-            }
-
-            $fpbt = fopen(public_path().'/project/license.txt', 'w');
-            fwrite($fpbt, $purchase_code);
-            fclose($fpbt);
-
-            $msg = 'Congratulation!! Your System is successfully Activated.';
-            return response()->json($msg);
         }
+        // else{
+        //     $this->setUp($chk['p2'],$chk['lData']);
+
+        //     if (file_exists(public_path().'/rooted.txt')){
+        //         unlink(public_path().'/rooted.txt');
+        //     }
+
+        //     $fpbt = fopen(public_path().'/project/license.txt', 'w');
+        //     fwrite($fpbt, $purchase_code);
+        //     fclose($fpbt);
+
+        //     $msg = 'Congratulation!! Your System is successfully Activated.';
+        //     return response()->json($msg);
+        // }
     }
 
     function setUp($mtFile,$goFileData){
