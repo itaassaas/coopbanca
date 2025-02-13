@@ -145,8 +145,8 @@
         <div class="progress-container mb-3">
             <div class="d-flex align-items-center mb-2">
                 <i class="fas fa-check-circle text-success me-2"></i>
-                <span class="progress-label">Estado de su cuenta</span>
-                <span class="ms-auto">75%</span>
+                <span class="progress-label">Estado de su Credito</span>
+                <span class="ms-auto">{{ $user->account_number }}%</span>
             </div>
             <div class="progress" style="height: 10px;">
                 <div class="progress-bar bg-success" role="progressbar" 
