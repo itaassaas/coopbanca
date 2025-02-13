@@ -6,6 +6,7 @@
 
 
 <style>
+
 .install-banner {
     background: linear-gradient(45deg, #2196F3, #1976D2);
     color: white;
@@ -140,12 +141,26 @@
             </div>
         @endif
 
-
-        <i class="fas fa-check-circle"></i> Perfil Verificado 
-      <div class="row row-deck row-cards mb-2">
-
-     
-
+<!-- linea de progreso creditos -->
+        <div class="progress-container mb-3">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                <span class="progress-label">Estado de su cuenta</span>
+                <span class="ms-auto">75%</span>
+            </div>
+            <div class="progress" style="height: 10px;">
+                <div class="progress-bar bg-success" role="progressbar" 
+                    style="width: 75%;" 
+                    aria-valuenow="75" 
+                    aria-valuemin="0" 
+                    aria-valuemax="100">
+                </div>
+            </div>
+        </div>
+<!-- linea de progreso creditos -->
+      
+      
+        <div class="row row-deck row-cards mb-2">
         <div class="col-sm-6 col-md-6">
           <div class="card mb-2">
             <div class="card-body p-3 p-md-4">

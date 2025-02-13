@@ -242,3 +242,27 @@ button.cmn--btn:hover {
 .cmn--btn {
 	font-family: <?php echo $color?>, sans-serif;
 }
+
+
+<!-- barra de progreso -->
+.progress-container {
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.progress {
+    background-color:rgb(47, 255, 0);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+}
+
+.progress-label {
+    font-weight: 500;
+    color: #495057;
+}
