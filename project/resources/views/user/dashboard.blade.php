@@ -141,6 +141,8 @@
         @endif
 
       <div class="row row-deck row-cards mb-2">
+        
+      <i class="fas fa-check-circle"></i> Perfil Verificado 
 
         <div class="col-sm-6 col-md-6">
           <div class="card mb-2">
