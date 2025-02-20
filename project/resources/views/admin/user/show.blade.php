@@ -425,16 +425,48 @@ document.getElementById('estado_credito').addEventListener('change', function() 
 
 .custom-select {
     width: 100% !important;
-    max-width: 100% !important;
+    height: auto !important;
     border: 2px solid #e5e9f2 !important;
-    padding: 0.75rem 1rem !important;
+    padding: 1rem !important;
     border-radius: 10px !important;
-    font-size: 0.95rem !important;
+    font-size: 1.1rem !important;
     color: #344767 !important;
     transition: all 0.3s ease !important;
     background-color: #fff !important;
     cursor: pointer !important;
-    margin-top: 0.5rem !important;
+    margin-top: 1rem !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23344767' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 1em !important;
+    padding-right: 2.5rem !important;
+}
+
+.credit-status-container {
+    padding: 2.5rem !important;
+    margin-bottom: 2rem !important;
+    /* ...resto de las propiedades existentes... */
+}
+
+option {
+    font-size: 1.1rem !important;
+    padding: 10px !important;
+}
+
+/* Ajustar el espaciado del label y el porcentaje */
+.credit-status-container label {
+    margin-bottom: 2rem !important;
+    font-size: 1.2rem !important;
+}
+
+.selected-percentage {
+    padding: 0.5rem 1.2rem !important;
+    font-size: 1.1rem !important;
+    min-width: 80px !important;
+    text-align: center !important;
 }
 
 .custom-select:hover {
