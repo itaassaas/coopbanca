@@ -424,6 +424,8 @@ document.getElementById('estado_credito').addEventListener('change', function() 
 }
 
 .custom-select {
+    width: 100% !important;
+    max-width: 100% !important;
     border: 2px solid #e5e9f2 !important;
     padding: 0.75rem 1rem !important;
     border-radius: 10px !important;
