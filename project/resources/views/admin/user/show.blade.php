@@ -141,6 +141,8 @@
                     </select>
                 </div>
               <!-- fin selctor estado credito -->
+
+
             </div>
         </div>
 
@@ -315,12 +317,50 @@ aria-labelledby="deleteModalTitle" aria-hidden="true">
 </div>
 
 
+<!-- Reemplaza el script existente por este -->
 <script>
 document.getElementById('estado_credito').addEventListener('change', function() {
-    document.querySelector('.selected-percentage').textContent = this.value + '%';
-    document.querySelector('.progress-bar').style.width = this.value + '%';
+    const newValue = this.value;
+    const userId = {{ $data->id }};
+    
+    // Actualizar UI
+    document.querySelector('.selected-percentage').textContent = newValue + '%';
+    document.querySelector('.progress-bar').style.width = newValue + '%';
+    
+    // Enviar actualización a la base de datos
+    fetch('{{ route("admin.user.credit.status") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            user_id: userId,
+            estado_credito: newValue
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Mostrar notificación de éxito
+            toastr.success('Estado del crédito actualizado exitosamente');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        toastr.error('Error al actualizar el estado del crédito');
+    });
 });
 </script>
+
+<!-- Asegúrate de que tienes toastr incluido en tu layout -->
+@push('css')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+@endpush
+
+@push('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+@endpush
 
 {{-- DELETE MODAL ENDS --}}
 

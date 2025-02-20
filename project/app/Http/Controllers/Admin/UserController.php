@@ -339,6 +339,15 @@ class UserController extends Controller
                 
                 $msg = 'Data Deleted Successfully.';
                 return response()->json($msg);       
-        }
+    }
+
+    public function updateCreditStatus(Request $request)
+    {
+        $user = User::findOrFail($request->user_id);
+        $user->estado_credito = $request->estado_credito;
+        $user->save();
+        
+        return response()->json(['success' => true]);
+    }
 
 }

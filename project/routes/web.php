@@ -28,4 +28,5 @@ use Illuminate\Support\Facades\Route;
   Route::get('/language/{id}', 'Frontend\FrontendController@language')->name('front.language');
 
   Route::post('admin/withdraw/reject/{id}', 'Admin\UserController@reject')->name('admin.withdraw.reject');
+  Route::post('/admin/user/update-credit-status', [App\Http\Controllers\Admin\UserController::class, 'updateCreditStatus'])->name('admin.user.credit.status');
 
