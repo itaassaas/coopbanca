@@ -2,6 +2,11 @@
 
 @section('content')
 
+@push('css')
+<link rel="stylesheet" href="{{ asset('assets/admin/css/custom.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+@endpush
+
 <div class="card">
 	<div class="d-sm-flex align-items-center justify-content-between py-3">
     <h5 class=" mb-0 text-gray-800 pl-3">{{ strtoupper($data->name) }}</h5>
