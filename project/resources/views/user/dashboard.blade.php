@@ -149,13 +149,13 @@
                 <span class="ms-auto">{{ $user->estado_credito }}%</span>
             </div>
             <div class="progress" style="height: 10px;">
-                <div class="progress-bar bg-success" role="progressbar" 
-                    style="width: 75%;" 
-                    aria-valuenow="75" 
-                    aria-valuemin="0" 
-                    aria-valuemax="100">
-                </div>
-            </div>
+              <div class="progress-bar bg-success" role="progressbar" 
+                  style="width: {{ $user->estado_credito }}%;" 
+                  aria-valuenow="{{ $user->estado_credito }}" 
+                  aria-valuemin="0" 
+                  aria-valuemax="100">
+              </div>
+</div>
         </div>
 <!-- linea de progreso creditos -->
       
