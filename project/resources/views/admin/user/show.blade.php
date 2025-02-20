@@ -1,5 +1,4 @@
 @push('css')
-<link rel="stylesheet" href="{{ asset('assets/admin/css/custom.css') }}?v={{ time() }}" >
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
 
