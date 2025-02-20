@@ -1,7 +1,50 @@
 @push('css')
 <link rel="stylesheet" href="{{ asset('assets/admin/css/custom.css') }}?v={{ time() }}" >
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+
+<style>
+.credit-status-container {
+    background: #fff !important;
+    padding: 1.5rem !important;
+    border-radius: 10px !important;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05) !important;
+    margin-top: 1.5rem !important;
+    border: 1px solid #e5e9f2 !important;
+}
+
+.progress-bar {
+    background: linear-gradient(45deg, #2196F3, #1976D2) !important;
+    transition: all 0.3s ease !important;
+}
+
+.selected-percentage {
+    margin-left: auto !important;
+    background: #E3F2FD !important;
+    padding: 0.3rem 0.8rem !important;
+    border-radius: 20px !important;
+    color: #2196F3 !important;
+    font-weight: 600 !important;
+}
+
+.custom-select {
+    border: 1px solid #e5e9f2 !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+.custom-select:focus {
+    border-color: #2196F3 !important;
+    box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.25) !important;
+    outline: none !important;
+}
+</style>
+
+
+
 @endpush
+
 
 @extends('layouts.admin')
 
