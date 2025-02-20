@@ -115,16 +115,31 @@
               </form>
 
               <!-- aqui selector estadoc redito -->
-              <div class="form-group">
-                <label for="estado_credito">Estado del Crédito (%)</label>
-                <select class="form-control" name="estado_credito" id="estado_credito" required>
-                    @for ($i = 0; $i <= 100; $i += 5)
-                        <option value="{{ $i }}" {{ $data->estado_credito == $i ? 'selected' : '' }}>
-                            {{ $i }}%
-                        </option>
-                    @endfor
-                </select>
-            </div>
+                <div class="form-group credit-status-container">
+                    <label for="estado_credito" class="d-block mb-3">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Estado del Crédito
+                        <span class="selected-percentage">{{ $data->estado_credito }}%</span>
+                    </label>
+                    <div class="progress mb-3" style="height: 10px;">
+                        <div class="progress-bar bg-success" role="progressbar" 
+                            style="width: {{ $data->estado_credito }}%;"
+                            aria-valuenow="{{ $data->estado_credito }}" 
+                            aria-valuemin="0" 
+                            aria-valuemax="100">
+                        </div>
+                    </div>
+                    <select class="form-select form-control custom-select" 
+                            name="estado_credito" 
+                            id="estado_credito" 
+                            required>
+                        @for ($i = 0; $i <= 100; $i += 5)
+                            <option value="{{ $i }}" {{ $data->estado_credito == $i ? 'selected' : '' }}>
+                                {{ $i }}% {{ $i == 100 ? '- Completado' : '' }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
               <!-- fin selctor estado credito -->
             </div>
         </div>
@@ -298,6 +313,51 @@ aria-labelledby="deleteModalTitle" aria-hidden="true">
 </div>
 </div>
 </div>
+
+
+
+<style>
+.credit-status-container {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.selected-percentage {
+    float: right;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.custom-select {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.custom-select:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.progress {
+    border-radius: 5px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+}
+</style>
+
+<script>
+document.getElementById('estado_credito').addEventListener('change', function() {
+    document.querySelector('.selected-percentage').textContent = this.value + '%';
+    document.querySelector('.progress-bar').style.width = this.value + '%';
+});
+</script>
 
 {{-- DELETE MODAL ENDS --}}
 
