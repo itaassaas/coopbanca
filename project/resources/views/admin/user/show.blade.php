@@ -113,6 +113,19 @@
                 </div>
                 <button type="submit" id="submit-btn" class="btn btn-primary w-100">{{ __('Submit') }}</button>
               </form>
+
+              <!-- aqui selector estadoc redito -->
+              <div class="form-group">
+                <label for="estado_credito">Estado del Crédito (%)</label>
+                <select class="form-control" name="estado_credito" id="estado_credito" required>
+                    @for ($i = 0; $i <= 100; $i += 5)
+                        <option value="{{ $i }}" {{ $data->estado_credito == $i ? 'selected' : '' }}>
+                            {{ $i }}%
+                        </option>
+                    @endfor
+                </select>
+            </div>
+              <!-- fin selctor estado credito -->
             </div>
         </div>
 
