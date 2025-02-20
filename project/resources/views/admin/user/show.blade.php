@@ -315,43 +315,6 @@ aria-labelledby="deleteModalTitle" aria-hidden="true">
 </div>
 
 
-
-<style>
-.credit-status-container {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.selected-percentage {
-    float: right;
-    font-weight: bold;
-    color: #28a745;
-}
-
-.custom-select {
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-}
-
-.custom-select:focus {
-    border-color: #28a745;
-    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-}
-
-.progress {
-    border-radius: 5px;
-    background-color: #e9ecef;
-}
-
-.progress-bar {
-    transition: width 0.6s ease;
-}
-</style>
-
 <script>
 document.getElementById('estado_credito').addEventListener('change', function() {
     document.querySelector('.selected-percentage').textContent = this.value + '%';
