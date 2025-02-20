@@ -1,11 +1,14 @@
+@push('css')
+<link rel="stylesheet" href="{{ asset('assets/admin/css/custom.css') }}?v={{ time() }}" >
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+@endpush
+
 @extends('layouts.admin')
 
 @section('content')
 
-@push('css')
-<link rel="stylesheet" href="{{ asset('assets/admin/css/custom.css') }}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-@endpush
+
+
 
 <div class="card">
 	<div class="d-sm-flex align-items-center justify-content-between py-3">
@@ -359,9 +362,7 @@ document.getElementById('estado_credito').addEventListener('change', function() 
 </script>
 
 <!-- Asegúrate de que tienes toastr incluido en tu layout -->
-@push('css')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-@endpush
+
 
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
