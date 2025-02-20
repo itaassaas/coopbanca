@@ -125,7 +125,7 @@
                         <div class="progress-bar bg-success" role="progressbar" 
                             style="width: {{ $data->estado_credito }}%;"
                             aria-valuenow="{{ $data->estado_credito }}" 
-                            aria-valuemin="{{ $user->estado_credito }}" 
+                            aria-valuemin="0" 
                             aria-valuemax="100">
                         </div>
                     </div>
