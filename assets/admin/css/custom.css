@@ -864,36 +864,39 @@ table.dataTable thead td {
 
 /* colores */
 
+
 .credit-status-container {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.selected-percentage {
-    float: right;
-    font-weight: bold;
-    color: #28a745;
-}
-
-.custom-select {
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-}
-
-.custom-select:focus {
-    border-color: #1e00ff;
-    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-}
-
-.progress {
-    border-radius: 5px;
-    background-color: #e9ecef;
+    background: #fff !important;
+    padding: 1.5rem !important;
+    border-radius: 10px !important;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05) !important;
+    margin-top: 1.5rem !important;
+    border: 1px solid #e5e9f2 !important;
 }
 
 .progress-bar {
-    transition: width 0.6s ease;
+    background: linear-gradient(45deg, #2196F3, #1976D2) !important;
+    transition: all 0.3s ease !important;
+}
+
+.selected-percentage {
+    margin-left: auto !important;
+    background: #E3F2FD !important;
+    padding: 0.3rem 0.8rem !important;
+    border-radius: 20px !important;
+    color: #2196F3 !important;
+    font-weight: 600 !important;
+}
+
+.custom-select {
+    border: 1px solid #e5e9f2 !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+.custom-select:focus {
+    border-color: #2196F3 !important;
+    box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.25) !important;
+    outline: none !important;
 }
