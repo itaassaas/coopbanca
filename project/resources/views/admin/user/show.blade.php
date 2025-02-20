@@ -5,37 +5,83 @@
 <style>
 .credit-status-container {
     background: #fff !important;
-    padding: 1.5rem !important;
-    border-radius: 10px !important;
-    box-shadow: 0 0 20px rgba(0,0,0,0.05) !important;
+    padding: 2rem !important;
+    border-radius: 15px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
     margin-top: 1.5rem !important;
-    border: 1px solid #e5e9f2 !important;
+    border: 2px solid #e5e9f2 !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.credit-status-container::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 4px !important;
+    background: linear-gradient(45deg, #2196F3, #1976D2) !important;
+}
+
+.credit-status-container label {
+    font-size: 1.1rem !important;
+    color: #344767 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.credit-status-container .fas {
+    color: #2196F3 !important;
+    font-size: 1.2rem !important;
+}
+
+.selected-percentage {
+    background: #E3F2FD !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 25px !important;
+    color: #2196F3 !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.15) !important;
+}
+
+.progress {
+    height: 12px !important;
+    background-color: #f0f2f5 !important;
+    border-radius: 10px !important;
+    margin: 1.5rem 0 !important;
+    overflow: hidden !important;
 }
 
 .progress-bar {
     background: linear-gradient(45deg, #2196F3, #1976D2) !important;
-    transition: all 0.3s ease !important;
-}
-
-.selected-percentage {
-    margin-left: auto !important;
-    background: #E3F2FD !important;
-    padding: 0.3rem 0.8rem !important;
-    border-radius: 20px !important;
-    color: #2196F3 !important;
-    font-weight: 600 !important;
+    transition: all 0.6s ease !important;
+    box-shadow: 0 2px 5px rgba(33, 150, 243, 0.2) !important;
 }
 
 .custom-select {
-    border: 1px solid #e5e9f2 !important;
+    border: 2px solid #e5e9f2 !important;
     padding: 0.75rem 1rem !important;
-    border-radius: 8px !important;
+    border-radius: 10px !important;
+    font-size: 0.95rem !important;
+    color: #344767 !important;
     transition: all 0.3s ease !important;
+    background-color: #fff !important;
+    cursor: pointer !important;
+    margin-top: 0.5rem !important;
+}
+
+.custom-select:hover {
+    border-color: #2196F3 !important;
+    background-color: #f8fafc !important;
 }
 
 .custom-select:focus {
     border-color: #2196F3 !important;
-    box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.25) !important;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.15) !important;
     outline: none !important;
 }
 </style>
