@@ -885,7 +885,7 @@ table.dataTable thead td {
 }
 
 .custom-select:focus {
-    border-color: #28a745;
+    border-color: #1e00ff;
     box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
 }
 
