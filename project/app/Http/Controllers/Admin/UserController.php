@@ -172,26 +172,30 @@ class UserController extends Controller
         //función sendVonageSMS
         private function sendVonageSMS($to, $message) 
         {
-            $basic  = new \Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET'));
-            $client = new \Client($basic);
-
+            $apiKey = env('VONAGE_API_KEY');
+            $apiSecret = env('VONAGE_API_SECRET');
+            $brandName = env('VONAGE_BRAND_NAME', 'CoopBanca');
+        
+            // Formatear el número de teléfono
             $to = $this->formatPhoneNumber($to);
             
             $url = 'https://rest.nexmo.com/sms/json';
             
             $data = array(
-                'api_key' => env('VONAGE_API_KEY'),
-                'api_secret' => env('VONAGE_API_SECRET'),
+                'api_key' => $apiKey,
+                'api_secret' => $apiSecret,
                 'to' => $to,
-                'from' => env('VONAGE_BRAND_NAME'),
-                'text' => $message
+                'from' => $brandName,
+                'text' => $message,
+                'type' => 'unicode'
             );
-
+        
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             
             $response = curl_exec($ch);
             $error = curl_error($ch);
@@ -199,14 +203,14 @@ class UserController extends Controller
             curl_close($ch);
             
             if ($error) {
-                Log::error("Error Vonage SMS: " . $error);
+                \Log::error("Error Vonage SMS: " . $error);
                 return false;
             }
             
             $result = json_decode($response, true);
             
             if (isset($result['messages'][0]['status']) && $result['messages'][0]['status'] != '0') {
-                Log::error("Error Vonage SMS: " . $result['messages'][0]['error-text']);
+                \Log::error("Error Vonage SMS: " . ($result['messages'][0]['error-text'] ?? 'Unknown error'));
                 return false;
             }
             
