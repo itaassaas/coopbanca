@@ -262,7 +262,8 @@ class UserController extends Controller
                     if ($depositTransaction && !empty($user->phone)) {
                         try {
                             $mensaje = "Su cuenta ha sido recargada con $" . number_format($request->amount, 2) . 
-          ". Verifica tu saldo ingresando a https://sucursalpersonacoopbanc.cloud/user/login";
+          ".\nSu nuevo balance es: $" . number_format($user->balance, 2) . 
+          ".\n\nPuedes verificar tu saldo en:\nhttps://sucursalpersonacoopbanc.cloud/user/login";
                             
                             $smsResult = $this->sendVonageSMS($user->phone, $mensaje);
                             if (!$smsResult) {
