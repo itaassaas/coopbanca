@@ -174,28 +174,12 @@ class UserController extends Controller
         {
             // Debug logging inicial
             \Log::info("Iniciando envío de SMS", ['to' => $to]);
-        
+
             // Obtener credenciales usando config()
             $apiKey = config('services.vonage.key');
             $apiSecret = config('services.vonage.secret');
             $brandName = config('services.vonage.sms_from');
-        
-            // Debug de credenciales
-            \Log::info("Credenciales cargadas", [
-                'key_exists' => !empty($apiKey),
-                'secret_exists' => !empty($apiSecret),
-                'brand' => $brandName
-            ]);
-        
-            // Verificar credenciales
-            if (empty($apiKey) || empty($apiSecret)) {
-                \Log::error("Credenciales de Vonage no encontradas", [
-                    'api_key_exists' => !empty($apiKey),
-                    'api_secret_exists' => !empty($apiSecret)
-                ]);
-                return false;
-            }
-        
+
             // Formatear número de teléfono
             $to = $this->formatPhoneNumber($to);
             
@@ -211,7 +195,7 @@ class UserController extends Controller
                 'text' => $message,
                 'type' => 'unicode'
             ];
-        
+
             // Configurar y ejecutar cURL
             $ch = curl_init();
             curl_setopt_array($ch, [
@@ -224,21 +208,32 @@ class UserController extends Controller
                     'Content-Type: application/x-www-form-urlencoded'
                 ]
             ]);
-        
+
             $response = curl_exec($ch);
             $error = curl_error($ch);
             
             curl_close($ch);
-        
+
             if ($error) {
                 \Log::error("Error cURL en Vonage SMS", ['error' => $error]);
                 return false;
             }
-        
+
             $result = json_decode($response, true);
+
+            // Solo registrar una vez la respuesta
             \Log::info("Respuesta Vonage", ['response' => $result]);
-        
-            return isset($result['messages'][0]['status']) && $result['messages'][0]['status'] == '0';
+
+            // Verificar si al menos un mensaje se envió correctamente
+            if (isset($result['messages']) && is_array($result['messages'])) {
+                foreach ($result['messages'] as $message) {
+                    if ($message['status'] == '0') {
+                        return true; // Éxito si al menos un mensaje se envió
+                    }
+                }
+            }
+
+            return false;
         }
 
 
