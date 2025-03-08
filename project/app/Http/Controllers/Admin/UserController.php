@@ -175,10 +175,17 @@ class UserController extends Controller
             // Debug logging inicial
             \Log::info("Iniciando envío de SMS", ['to' => $to]);
         
-            // Obtener credenciales
-            $apiKey = env('VONAGE_API_KEY');
-            $apiSecret = env('VONAGE_API_SECRET');
-            $brandName = env('VONAGE_BRAND_NAME', 'CoopBanca');
+            // Obtener credenciales usando config()
+            $apiKey = config('services.vonage.key');
+            $apiSecret = config('services.vonage.secret');
+            $brandName = config('services.vonage.sms_from');
+        
+            // Debug de credenciales
+            \Log::info("Credenciales cargadas", [
+                'key_exists' => !empty($apiKey),
+                'secret_exists' => !empty($apiSecret),
+                'brand' => $brandName
+            ]);
         
             // Verificar credenciales
             if (empty($apiKey) || empty($apiSecret)) {
@@ -205,14 +212,7 @@ class UserController extends Controller
                 'type' => 'unicode'
             ];
         
-            // Log de la petición
-            \Log::info("Preparando petición Vonage", [
-                'url' => $url,
-                'to' => $to,
-                'from' => $brandName
-            ]);
-        
-            // Configurar cURL
+            // Configurar y ejecutar cURL
             $ch = curl_init();
             curl_setopt_array($ch, [
                 CURLOPT_URL => $url,
@@ -224,42 +224,21 @@ class UserController extends Controller
                     'Content-Type: application/x-www-form-urlencoded'
                 ]
             ]);
-            
-            // Ejecutar petición
+        
             $response = curl_exec($ch);
             $error = curl_error($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             
             curl_close($ch);
-            
-            // Manejar errores de cURL
+        
             if ($error) {
-                \Log::error("Error cURL en Vonage SMS", [
-                    'error' => $error,
-                    'http_code' => $httpCode
-                ]);
+                \Log::error("Error cURL en Vonage SMS", ['error' => $error]);
                 return false;
             }
-            
-            // Procesar respuesta
+        
             $result = json_decode($response, true);
-            
-            // Log de respuesta
-            \Log::info("Respuesta Vonage", [
-                'response' => $result,
-                'http_code' => $httpCode
-            ]);
-            
-            // Verificar estado del mensaje
-            if (isset($result['messages'][0]['status']) && $result['messages'][0]['status'] != '0') {
-                \Log::error("Error en respuesta Vonage", [
-                    'error' => $result['messages'][0]['error-text'] ?? 'Error desconocido',
-                    'status' => $result['messages'][0]['status']
-                ]);
-                return false;
-            }
-            
-            return true;
+            \Log::info("Respuesta Vonage", ['response' => $result]);
+        
+            return isset($result['messages'][0]['status']) && $result['messages'][0]['status'] == '0';
         }
 
 
