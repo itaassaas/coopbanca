@@ -126,7 +126,7 @@
                 <div class="form-group credit-status-container">
                     <label for="estado_credito" class="d-block mb-3">
                         <i class="fas fa-chart-line me-2"></i>
-                        Estado del Crédito Actual .
+                        Estado del Crédito A
                         <span class="selected-percentage">{{ $data->estado_credito }}%</span>
                     </label>
                     <div class="progress mb-3" style="height: 10px;">
