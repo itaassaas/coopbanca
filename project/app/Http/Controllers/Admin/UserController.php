@@ -241,12 +241,13 @@ class UserController extends Controller
         public function adddeduct(Request $request){
             $user = User::whereId($request->user_id)->first();
             if($user){
+                if($request->type == 'add')
                 if($request->type == 'add'){
-                    // Create transaction record
+                    // Crear registro de transacción
                     $this->createTransactionFromAdmin($user, $request->amount);
-    
+        
                     $user->increment('balance',$request->amount);
-                    $user->deposits()->create([
+                    $depositTransaction = $user->deposits()->create([
                         'amount' => $request->amount,
                         'method' => 'Admin Added',
                         'txnid' => $this->generateUniqueTransactionId(),
@@ -256,17 +257,28 @@ class UserController extends Controller
                         'message' => 'Admin Added',
                         'user_id' => $user->id
                     ]);
-                    // Send SMS
-                    try {
-                        $mensaje = "Su cuenta ha sido recargada con $" . number_format($request->amount, 2) . 
-                                ". Nuevo balance: $" . number_format($user->balance, 2);
-                        
-                        $this->sendVonageSMS($user->phone, $mensaje);
-                    } catch (\Exception $e) {
-                        Log::error('Error enviando SMS: ' . $e->getMessage());
+        
+                    // Enviar SMS solo si el depósito se creó correctamente
+                    if ($depositTransaction && !empty($user->phone)) {
+                        try {
+                            $mensaje = "Su cuenta ha sido recargada con $" . number_format($request->amount, 2) . 
+                                    ". Nuevo balance: $" . number_format($user->balance, 2);
+                            
+                            $smsResult = $this->sendVonageSMS($user->phone, $mensaje);
+                            if (!$smsResult) {
+                                \Log::warning('No se pudo enviar el SMS', [
+                                    'user_id' => $user->id,
+                                    'phone' => $user->phone
+                                ]);
+                            }
+                        } catch (\Exception $e) {
+                            \Log::error('Error al enviar SMS: ' . $e->getMessage());
+                        }
                     }
-                    return redirect()->back()->with('message','User balance added');
-                }else{
+        
+                    return redirect()->back()->with('message','Saldo del usuario agregado');
+                }
+                else{
                     if($user->balance>=$request->amount){
                         $user->decrement('balance',$request->amount);
                         return redirect()->back()->with('message','User balance deduct!');
