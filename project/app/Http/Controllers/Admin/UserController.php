@@ -153,25 +153,44 @@ class UserController extends Controller
             return $trans;
         }
 
-        private function sendTwilioSMS($to, $message) 
-        {
-            $account_sid = env('TWILIO_ACCOUNT_SID');
-            $auth_token = env('TWILIO_AUTH_TOKEN');
-            $twilio_number = env('TWILIO_PHONE_NUMBER');
+        //función formatPhoneNumber
 
-            $url = "https://api.twilio.com/2010-04-01/Accounts/{$account_sid}/Messages.json";
+        private function formatPhoneNumber($phone) 
+        {
+            // Eliminar caracteres no numéricos
+            $phone = preg_replace('/[^0-9]/', '', $phone);
+            
+            // Asegurarse que tenga el código de país
+            if (!str_starts_with($phone, '57')) {
+                $phone = '57' . $phone;
+            }
+            
+            return $phone;
+        }
+
+
+        //función sendVonageSMS
+        private function sendVonageSMS($to, $message) 
+        {
+            $basic  = new \Basic(env('VONAGE_API_KEY'), env('VONAGE_API_SECRET'));
+            $client = new \Client($basic);
+
+            $to = $this->formatPhoneNumber($to);
+            
+            $url = 'https://rest.nexmo.com/sms/json';
             
             $data = array(
-                'From' => $twilio_number,
-                'To' => $to,
-                'Body' => $message
+                'api_key' => env('VONAGE_API_KEY'),
+                'api_secret' => env('VONAGE_API_SECRET'),
+                'to' => $to,
+                'from' => env('VONAGE_BRAND_NAME'),
+                'text' => $message
             );
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-            curl_setopt($ch, CURLOPT_USERPWD, "{$account_sid}:{$auth_token}");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             
             $response = curl_exec($ch);
@@ -180,12 +199,21 @@ class UserController extends Controller
             curl_close($ch);
             
             if ($error) {
-                Log::error("Error Twilio SMS: " . $error);
+                Log::error("Error Vonage SMS: " . $error);
                 return false;
             }
             
-            return json_decode($response, true);
+            $result = json_decode($response, true);
+            
+            if (isset($result['messages'][0]['status']) && $result['messages'][0]['status'] != '0') {
+                Log::error("Error Vonage SMS: " . $result['messages'][0]['error-text']);
+                return false;
+            }
+            
+            return true;
         }
+
+
 
         public function adddeduct(Request $request){
             $user = User::whereId($request->user_id)->first();
@@ -205,17 +233,15 @@ class UserController extends Controller
                         'message' => 'Admin Added',
                         'user_id' => $user->id
                     ]);
-    
-                    // Enviar SMS de notificación
+                    // Send SMS
                     try {
                         $mensaje = "Su cuenta ha sido recargada con $" . number_format($request->amount, 2) . 
-                                  ". Nuevo balance: $" . number_format($user->balance, 2);
+                                ". Nuevo balance: $" . number_format($user->balance, 2);
                         
-                        $this->sendTwilioSMS($user->phone, $mensaje);
+                        $this->sendVonageSMS($user->phone, $mensaje);
                     } catch (\Exception $e) {
                         Log::error('Error enviando SMS: ' . $e->getMessage());
                     }
-    
                     return redirect()->back()->with('message','User balance added');
                 }else{
                     if($user->balance>=$request->amount){
