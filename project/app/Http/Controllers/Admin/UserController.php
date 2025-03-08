@@ -176,6 +176,12 @@ class UserController extends Controller
             $apiSecret = env('VONAGE_API_SECRET');
             $brandName = env('VONAGE_BRAND_NAME', 'CoopBanca');
         
+            // Validar credenciales
+            if (!$apiKey || !$apiSecret) {
+                \Log::error("Vonage API credentials not found");
+                return false;
+            }
+        
             // Formatear el número de teléfono
             $to = $this->formatPhoneNumber($to);
             
@@ -190,12 +196,15 @@ class UserController extends Controller
                 'type' => 'unicode'
             );
         
+            \Log::info("Sending SMS to: " . $to); // Debug log
+        
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
             
             $response = curl_exec($ch);
             $error = curl_error($ch);
@@ -208,6 +217,7 @@ class UserController extends Controller
             }
             
             $result = json_decode($response, true);
+            \Log::info("Vonage Response: " . json_encode($result)); // Debug log
             
             if (isset($result['messages'][0]['status']) && $result['messages'][0]['status'] != '0') {
                 \Log::error("Error Vonage SMS: " . ($result['messages'][0]['error-text'] ?? 'Unknown error'));
