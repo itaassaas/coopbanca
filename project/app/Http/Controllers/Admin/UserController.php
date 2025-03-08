@@ -193,7 +193,7 @@ class UserController extends Controller
                 'to' => $to,
                 'from' => $brandName,
                 'text' => $message,
-                'type' => 'unicode'
+                'type' => 'text'  // Cambiado de 'unicode' a 'text'
             ];
 
             // Configurar y ejecutar cURL
