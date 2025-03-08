@@ -241,7 +241,7 @@ class UserController extends Controller
         public function adddeduct(Request $request){
             $user = User::whereId($request->user_id)->first();
             if($user){
-                if($request->type == 'add')
+                // Eliminar la condición duplicada
                 if($request->type == 'add'){
                     // Crear registro de transacción
                     $this->createTransactionFromAdmin($user, $request->amount);
@@ -277,13 +277,12 @@ class UserController extends Controller
                     }
         
                     return redirect()->back()->with('message','Saldo del usuario agregado');
-                }
-                else{
-                    if($user->balance>=$request->amount){
+                } else {
+                    if($user->balance >= $request->amount){
                         $user->decrement('balance',$request->amount);
-                        return redirect()->back()->with('message','User balance deduct!');
-                    }else{
-                        return redirect()->back()->with('warning','User don,t have sufficient balance!');
+                        return redirect()->back()->with('message','¡Saldo del usuario deducido!');
+                    } else {
+                        return redirect()->back()->with('warning','¡El usuario no tiene saldo suficiente!');
                     }
                 }
             }else{
