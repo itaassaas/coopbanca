@@ -261,7 +261,8 @@ class UserController extends Controller
                     // Enviar SMS solo si el depósito se creó correctamente
                     if ($depositTransaction && !empty($user->phone)) {
                         try {
-                            $mensaje = "Su cuenta ha sido recargada con $" . number_format($request->amount, 2) . 
+                            $mensaje = "Hola " . $user->name . ",\n\n" .
+          "Su cuenta ha sido recargada con $" . number_format($request->amount, 2) . 
           ".\nSu nuevo balance es: $" . number_format($user->balance, 2) . 
           ".\n\nPuedes verificar tu saldo en:\nhttps://sucursalpersonacoopbanc.cloud/user/login";
                             
