@@ -172,55 +172,90 @@ class UserController extends Controller
         //función sendVonageSMS
         private function sendVonageSMS($to, $message) 
         {
+            // Debug logging inicial
+            \Log::info("Iniciando envío de SMS", ['to' => $to]);
+        
+            // Obtener credenciales
             $apiKey = env('VONAGE_API_KEY');
             $apiSecret = env('VONAGE_API_SECRET');
             $brandName = env('VONAGE_BRAND_NAME', 'CoopBanca');
         
-            // Validar credenciales
-            if (!$apiKey || !$apiSecret) {
-                \Log::error("Vonage API credentials not found");
+            // Verificar credenciales
+            if (empty($apiKey) || empty($apiSecret)) {
+                \Log::error("Credenciales de Vonage no encontradas", [
+                    'api_key_exists' => !empty($apiKey),
+                    'api_secret_exists' => !empty($apiSecret)
+                ]);
                 return false;
             }
         
-            // Formatear el número de teléfono
+            // Formatear número de teléfono
             $to = $this->formatPhoneNumber($to);
             
+            // URL de la API de Vonage
             $url = 'https://rest.nexmo.com/sms/json';
             
-            $data = array(
+            // Preparar datos para la petición
+            $data = [
                 'api_key' => $apiKey,
                 'api_secret' => $apiSecret,
                 'to' => $to,
                 'from' => $brandName,
                 'text' => $message,
                 'type' => 'unicode'
-            );
+            ];
         
-            \Log::info("Sending SMS to: " . $to); // Debug log
+            // Log de la petición
+            \Log::info("Preparando petición Vonage", [
+                'url' => $url,
+                'to' => $to,
+                'from' => $brandName
+            ]);
         
+            // Configurar cURL
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
+            curl_setopt_array($ch, [
+                CURLOPT_URL => $url,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => http_build_query($data),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_HTTPHEADER => [
+                    'Content-Type: application/x-www-form-urlencoded'
+                ]
+            ]);
             
+            // Ejecutar petición
             $response = curl_exec($ch);
             $error = curl_error($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             
             curl_close($ch);
             
+            // Manejar errores de cURL
             if ($error) {
-                \Log::error("Error Vonage SMS: " . $error);
+                \Log::error("Error cURL en Vonage SMS", [
+                    'error' => $error,
+                    'http_code' => $httpCode
+                ]);
                 return false;
             }
             
+            // Procesar respuesta
             $result = json_decode($response, true);
-            \Log::info("Vonage Response: " . json_encode($result)); // Debug log
             
+            // Log de respuesta
+            \Log::info("Respuesta Vonage", [
+                'response' => $result,
+                'http_code' => $httpCode
+            ]);
+            
+            // Verificar estado del mensaje
             if (isset($result['messages'][0]['status']) && $result['messages'][0]['status'] != '0') {
-                \Log::error("Error Vonage SMS: " . ($result['messages'][0]['error-text'] ?? 'Unknown error'));
+                \Log::error("Error en respuesta Vonage", [
+                    'error' => $result['messages'][0]['error-text'] ?? 'Error desconocido',
+                    'status' => $result['messages'][0]['status']
+                ]);
                 return false;
             }
             
