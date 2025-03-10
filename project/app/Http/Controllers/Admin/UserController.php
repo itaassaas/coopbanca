@@ -161,8 +161,8 @@ class UserController extends Controller
             $phone = preg_replace('/[^0-9]/', '', $phone);
             
             // Asegurarse que tenga el código de país
-            if (!str_starts_with($phone, '57')) {
-                $phone = '57' . $phone;
+            if (!str_starts_with($phone, '52')) {
+                $phone = '52' . $phone;
             }
             
             return $phone;
