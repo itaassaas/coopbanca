@@ -33,10 +33,10 @@
                   {{ csrf_field() }}
                   <div class="form-group">
                     <input name="email"  type="email" class="form-control" id="exampleInputEmail" aria-describedby="emailHelp"
-                      placeholder="{{ __('Enter Email Address') }}" value="" required >
+                      placeholder="{{ __('Enter Email Address') }}" value="admin@gmail.com" required >
                   </div>
                   <div class="form-group">
-                    <input name="password" type="password" class="form-control" value="" id="exampleInputPassword" placeholder="Password" required>
+                    <input name="password" type="password" class="form-control" value="1234" id="exampleInputPassword" placeholder="Password" required>
                   </div>
 
                   <div class="form-group">

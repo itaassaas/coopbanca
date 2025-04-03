@@ -1,15 +1,101 @@
 @extends('layouts.user')
 
+
 @push('css')
+
+
+
+<style>
+
+.install-banner {
+    background: linear-gradient(45deg, #2196F3, #1976D2);
+    color: white;
+    border: none;
+    margin-bottom: 20px;
+    padding: 15px;
+}
+.fa-share-square, .fa-plus-square, .fa-ellipsis-v {
+    color: #FFD700;
+}
+.install-btn {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid white;
+    color: white;
+    margin-left: 10px;
+}
+.install-btn:hover {
+    background: rgba(255,255,255,0.3);
+    color: white;
+}
+</style>
     
 @endpush
 
 @section('contents')
-<div class="container-xl">
 
-    <div class="page-header d-print-none">
+<!-- Add SweetAlert2 CDN in head section or before closing body -->
+<link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- En el head de tu layout -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-    </div>
+
+    <div class="container-xl">
+
+            <div class="alert alert-info install-banner alert-dismissible fade show" role="alert">
+                <div class="d-flex align-items-center justify-content-between w-100" id="pwaPrompt">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-mobile-alt me-2"></i>
+                        <span id="installInstructions">
+                            <strong>¡Importante!</strong> Para acceder más rápido:
+                        </span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <script>
+                // Detect iOS
+                const isIos = () => {
+                    return /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+                }
+
+                // Detect if standalone
+                const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+                document.addEventListener('DOMContentLoaded', (event) => {
+                    const installInstructions = document.getElementById('installInstructions');
+                    
+                    if (isIos()) {
+                        if (!isInStandaloneMode()) {
+                            installInstructions.innerHTML = `
+                                <strong>¡Importante!</strong> Para instalar en iPhone/iPad: 
+                                Toca el ícono <i class="fas fa-share-square mx-1"></i> y luego 
+                                "Añadir a Pantalla de Inicio" <i class="fas fa-plus-square mx-1"></i>
+                            `;
+                        }
+                    } else {
+                        // For Android
+                        if (window.matchMedia('(display-mode: standalone)').matches) {
+                            document.getElementById('pwaPrompt').style.display = 'none';
+                        } else {
+                            installInstructions.innerHTML = `
+                                <strong>¡Importante!</strong> Para instalar en Android: 
+                                Toca los tres puntos <i class="fas fa-ellipsis-v mx-1"></i> y luego 
+                                "Añadir a Pantalla Principal" <i class="fas fa-plus-square mx-1"></i>
+                            `;
+                        }
+                    }
+                });
+              </script>
+      
+
+
+      </div>
+    <!-- <div class="page-header d-print-none">
+
+    </div> -->
   </div>
   <div class="page-body">
     <div class="container-xl">
@@ -31,8 +117,50 @@
         </div>
       @endif
 
-      <div class="row row-deck row-cards mb-2">
 
+
+
+      <!-- Add this after the balance display and before the withdraw button -->
+
+        @if($user->withdraws->where('motivo_rechazo', '!=', null)->count() > 0)
+            <div class="alert alert-warning mt-3" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <div>
+                        <strong>Novedades:</strong>
+                        <div class="mt-2">
+                            @foreach($user->withdraws->where('motivo_rechazo', '!=', null) as $withdraw)
+                                <div class="border-start border-warning ps-3 mb-2">
+                                    <small class="d-block text-muted">{{ $withdraw->created_at->format('d/m/Y H:i') }}</small>
+                                    {{ $withdraw->motivo_rechazo }}
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+<!-- linea de progreso creditos -->
+        <div class="progress-container mb-3">
+            <div class="d-flex align-items-center mb-2">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                <span class="progress-label">Estado de su Credito</span>
+                <span class="ms-auto">{{ $user->estado_credito }}%</span>
+            </div>
+            <div class="progress" style="height: 10px;">
+              <div class="progress-bar bg-success" role="progressbar" 
+                  style="width: {{ $user->estado_credito }}%;" 
+                  aria-valuenow="{{ $user->estado_credito }}" 
+                  aria-valuemin="0" 
+                  aria-valuemax="100">
+              </div>
+</div>
+        </div>
+<!-- linea de progreso creditos -->
+      
+      
+        <div class="row row-deck row-cards mb-2">
         <div class="col-sm-6 col-md-6">
           <div class="card mb-2">
             <div class="card-body p-3 p-md-4">
@@ -42,7 +170,37 @@
                   </div>
                   <div class="content">
                     <div class="subheader">{{__('Account Number')}}</div>
-                    <div class="h1 mb-0 mt-2">{{ $user->account_number }}</div>
+
+                      <div class="d-flex align-items-center">
+                          <div class="h1 mb-0 mt-2">{{ $user->account_number }}</div>
+                          <button class="btn btn-sm btn-link text-primary p-0 ml-2" 
+                                  onclick="copyToClipboard('{{ $user->account_number }}', event)" 
+                                  data-toggle="tooltip" 
+                                  title="Copiar">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                              </svg>
+                          </button>
+                      </div>
+                    
+                    <div class="h1 mb-0 mt-2">
+                      @if($user->kyc_status == 1)
+                          <span class="badge badge-success">
+                              <i class="fas fa-check-circle"></i> Perfil Verificado 
+                          </span>
+                      @elseif($user->kyc_status == 0)
+                          <span class="badge badge-warning">
+                              <i class="fas fa-clock"></i> Verificación KYC Pendiente
+                          </span>
+                      @else
+                          <span class="badge badge-danger">
+                              <i class="fas fa-times-circle"></i> Verificación KYC Rechazada
+                          </span>
+                      @endif
+                    </div>
+
+
                   </div>
                 </div>
               </div>
@@ -59,6 +217,39 @@
                   <div class="content">
                     <div class="subheader">{{__('Available Balance')}}</div>
                     <div class="h1 mb-0 mt-2">{{ showprice($user->balance,$currency) }}</div>
+                    <button onclick="handleWithdraw()" class="btn btn-primary btn-lg w-100 mt-3 d-flex align-items-center justify-content-center" style="transition: all 0.3s ease; font-size: 0.9rem;">
+                        <i class="fas fa-wallet me-2"></i>
+                        Retirar Fondos
+                    </button>
+
+                    <style>
+                    .btn-primary:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    }
+                    </style>
+                  
+
+                    <script>
+                    function handleWithdraw() {
+                        Swal.fire({
+                            title: '¡Importante!',
+                            text: 'Recuerda que para retirar tienes que tener el comprobante de pago en una foto o escaneado.\n\n¿Lo tienes?',
+                            icon: 'info',
+                            showCancelButton: true,
+                            confirmButtonText: 'Sí',
+                            cancelButtonText: 'No',
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = 'https://sucursalpersonacoopbanc.cloud/user/withdraw';
+                            }
+                            // If cancelled, do nothing and stay on current page
+                        });
+                    }
+                    </script>
+                 
                   </div>
                 </div>
               </div>
@@ -115,7 +306,7 @@
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-4 mb-3">
+        <!-- <div class="col-sm-6 col-md-4 mb-3">
           <div class="card h-100 card--info-item">
             <div class="text-end icon">
               <i class="fas fa-wallet"></i>
@@ -125,9 +316,9 @@
               <div class="text-muted">@lang('DPS')</div>
             </div>
           </div>
-        </div>
+        </div> -->
 
-        <div class="col-sm-6 col-md-4 mb-3">
+        <!-- <div class="col-sm-6 col-md-4 mb-3">
           <div class="card h-100 card--info-item">
             <div class="text-end icon">
               <i class="far fa-credit-card"></i>
@@ -137,7 +328,7 @@
               <div class="text-muted">@lang('FDR')</div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <div class="row mb-3">
@@ -214,6 +405,7 @@
                           </div>
                         </td>
                         
+                        
                       </tr>
                     @endforeach
   
@@ -242,4 +434,53 @@
         alert('copied');
     }
     </script>
+
+
+
+<script>
+
+function copyToClipboard(text, event) {
+    // Configurar toastr una sola vez
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "2000",
+        "preventDuplicates": true
+    };
+    
+    // Limpiar toasts existentes
+    toastr.clear();
+    
+    // Verificar si tenemos el evento y el botón
+    const btn = event?.currentTarget || event?.target;
+    if (!btn) {
+        console.error('No se pudo encontrar el botón');
+        return;
+    }
+    
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            toastr.success("Copiado al portapapeles");
+            
+            // Guardar el contenido original del botón
+            const originalContent = btn.innerHTML;
+            
+            // Efecto del botón
+            btn.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                btn.innerHTML = originalContent;
+            }, 1000);
+        })
+        .catch((err) => {
+            toastr.error("Error al copiar");
+            console.error(err);
+        });
+}
+
+
+</script>
+
+
 @endpush
+

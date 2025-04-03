@@ -344,6 +344,7 @@
                   <th>@lang('Name')</th>
                   <th>@lang('Email')</th>
                   <th>@lang('Status')</th>
+                  <th>@lang('Balance')</th>
                   <th>@lang('Action')</th>
                 </tr>
               </thead>
@@ -354,6 +355,7 @@
                     <td data-label="@lang('Name')">{{ $data->name }}</td>
                     <td data-label="@lang('Email')">{{ $data->email }}</td>
                     <td data-label="@lang('Status')"><span class="badge badge-{{ $data->is_banned == 0 ? 'success' : 'danger'}}">{{ $data->is_banned == 0 ? 'activated' : 'deactivated'}}</span></td>
+                    <td data-label="@lang('Balance')">{{ $data->balance }}</td>
                     <td data-label="@lang('Action')"><a href="{{ route('admin-user-show',$data->id) }}" class="btn btn-sm btn-primary">@lang('Detail')</a></td>
                   </tr>
                 @endforeach

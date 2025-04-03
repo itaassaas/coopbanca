@@ -72,7 +72,7 @@
                                               {{ showprice($data->profit_amount,$currency) }}
                                               <br>
                                               @if ($data->profit_type == 'partial')
-                                                  <span class="text-info"> @lang('Next Frofit Days') ({{ Carbon\Carbon::parse($data->next_profit_time)->toDateString()}})</span>
+                                                  <span class="text-info"> @lang('Next Frofit Days') ({{ $data->next_profit_time->toDateString() }})</span>
                                               @else 
                                                   <span class="text-info"> @lang('Profit will get after locked period') </span>
                                               @endif

@@ -51,4 +51,10 @@ return [
         'ocean' => 'https://geniusocean.com/verify/'
     ],
 
+    'vonage' => [
+        'key' => env('VONAGE_API_KEY', '205994f6'),
+        'secret' => env('VONAGE_API_SECRET', '7gfPVLLCfcBubWW2'),
+        'sms_from' => env('VONAGE_BRAND_NAME', 'CoopBanca'),
+    ],
+
 ];

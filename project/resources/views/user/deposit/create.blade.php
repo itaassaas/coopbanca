@@ -40,41 +40,6 @@
                             </select>
                         </div>
 
-
-                        <div id="card-view" class="col-lg-12 pt-3 d-none">
-                          <div class="row">
-                              <input type="hidden" name="cmd" value="_xclick">
-                              <input type="hidden" name="no_note" value="1">
-                              <input type="hidden" name="lc" value="UK">
-                              <input type="hidden" name="bn" value="PP-BuyNowBF:btn_buynow_LG.gif:NonHostedGuest">
-
-                              <div class="col-lg-6 mb-3">
-                                  <input type="text" class="form-control card-elements" name="cardNumber" placeholder="{{ __('Card Number') }}" autocomplete="off" required autofocus oninput="validateCard(this.value);"/>
-                                  <span id="errCard"></span>
-                              </div>
-
-                              <div class="col-lg-6 cardRow mb-3">
-                                  <input type="text" class="form-control card-elements" placeholder="{{ ('Card CVC') }}" name="cardCVC" oninput="validateCVC(this.value);">
-                                  <span id="errCVC"></span>
-                              </div>
-
-                              <div class="col-lg-6">
-                                  <input type="text" class="form-control card-elements" placeholder="{{ __('Month') }}" name="month" >
-                              </div>
-
-                              <div class="col-lg-6">
-                                  <input type="text" class="form-control card-elements" placeholder="{{ __('Year') }}" name="year">
-                              </div>
-
-                          </div>
-                      </div>
-
-
-
-
-
-
-
                         <div class="col-lg-12 mt-4 manual-payment d-none">
                             <div class="card">
                               <div class="card-body">
@@ -123,6 +88,7 @@
 
 @push('js')
 
+<script src="https://js.paystack.co/v1/inline.js"></script>
 
 <script type="text/javascript">
 'use strict';
@@ -133,8 +99,8 @@ $(document).on('change','#withmethod',function(){
 	if(val == 'stripe')
 	{
 		$('#deposit-form').prop('action','{{ route('deposit.stripe.submit') }}');
-		$('#card-view').addClass('d-none');
-		$('.card-elements').prop('required',false);
+		$('#card-view').removeClass('d-none');
+		$('.card-elements').prop('required',true);
         $('#manual_transaction_id').prop('required',false);
         $('.manual-payment').addClass('d-none');
 	}
@@ -183,6 +149,15 @@ $(document).on('change','#withmethod',function(){
         $('.manual-payment').addClass('d-none');
     }
 
+    if(val == 'paystack') {
+        $('#deposit-form').prop('action','{{ route('deposit.paystack.submit') }}');
+        $('#deposit-form').prop('class','step1-form');
+        $('#card-view').addClass('d-none');
+        $('.card-elements').prop('required',false);
+        $('#manual_transaction_id').prop('required',false);
+        $('.manual-payment').addClass('d-none');
+    }
+
     if(val == 'instamojo') {
         $('#deposit-form').prop('action','{{ route('deposit.instamojo.submit') }}');
         $('#card-view').addClass('d-none');
@@ -212,11 +187,90 @@ $(document).on('change','#withmethod',function(){
 
 });
 
+$(document).on('submit','.step1-form',function(){
+    var val = $('#sub').val();
+    var total = $('#amount').val();
+    var paystackInfo = $('#paystackInfo').val();
+    var curr = $('#currencyCode').val();
+    total = Math.round(total);
+        if(val == 0)
+        {
+        var handler = PaystackPop.setup({
+          key: paystackInfo,
+          email: $('input[name=email]').val(),
+          amount: total * 100,
+          currency: curr,
+          ref: ''+Math.floor((Math.random() * 1000000000) + 1),
+          callback: function(response){
+            $('#ref_id').val(response.reference);
+            $('#sub').val('1');
+            $('#final-btn').click();
+          },
+          onClose: function(){
+            window.location.reload();
+          }
+        });
+        handler.openIframe();
+            return false;                    
+        }
+        else {
+          $('#preloader').show();
+            return true;   
+        }
+});
 
+
+
+    closedFunction=function() {
+        alert('Payment Cancelled!');
+    }
+
+     successFunction=function(transaction_id) {
+        window.location.href = '{{ url('order/payment/return') }}?txn_id=' + transaction_id;
+    }
+
+     failedFunction=function(transaction_id) {
+         alert('Transaction was not successful, Ref: '+transaction_id)
+    }
 </script>
 
 
+  <script type="text/javascript" src="{{ asset('assets/front/js/payvalid.js') }}"></script>
+  <script type="text/javascript" src="{{ asset('assets/front/js/paymin.js') }}"></script>
+  <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+  <script type="text/javascript" src="{{ asset('assets/front/js/payform.js') }}"></script>
 
+
+  <script type="text/javascript">
+  'use strict';
+  
+    var cnstatus = false;
+    var dateStatus = false;
+    var cvcStatus = false;
+
+    function validateCard(cn) {
+      cnstatus = Stripe.card.validateCardNumber(cn);
+      if (!cnstatus) {
+        $("#errCard").html('Card number not valid<br>');
+      } else {
+        $("#errCard").html('');
+      }
+      btnStatusChange();
+
+
+    }
+
+    function validateCVC(cvc) {
+      cvcStatus = Stripe.card.validateCVC(cvc);
+      if (!cvcStatus) {
+        $("#errCVC").html('CVC number not valid');
+      } else {
+        $("#errCVC").html('');
+      }
+      btnStatusChange();
+    }
+
+  </script>
 
 
 @endpush

@@ -43,7 +43,7 @@
                                     <tr>
                                         <td data-label="{{ __('Date') }}">
                                             <div>
-                                              {{ Carbon\Carbon::parse($data->created_at)->toDateString() }}
+                                              {{ $data->created_at->toDateString() }}
                                             </div>
                                         </td>
                                         <td data-label="{{ __('Transaction No') }}">

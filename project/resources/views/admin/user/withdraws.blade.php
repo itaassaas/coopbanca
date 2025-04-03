@@ -1,4 +1,7 @@
 @extends('layouts.admin')
+<!-- Primero, agregar SweetAlert2 CDN en el head o antes de cerrar body -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 @section('content')
 
@@ -77,6 +80,9 @@
             <div class="modal-body">
                 <p class="text-center">{{ __("You are about to accept this Withdraw.") }}</p>
                 <p class="text-center">{{ __("Do you want to proceed?") }}</p>
+
+                
+
             </div>
 
             <div class="modal-footer justify-content-center">
@@ -101,6 +107,26 @@
             <div class="modal-body">
                 <p class="text-center">{{ __("You are about to reject this Withdraw.") }}</p>
                 <p class="text-center">{{ __("Do you want to proceed?") }}</p>
+
+                <div class="form-group mt-3">
+                    <label for="motivo_rechazo" class="form-label required">{{ __("Motivo del Rechazo") }}</label>
+                    <textarea 
+                        name="motivo_rechazo" 
+                        id="motivo_rechazo" 
+                        class="form-control" 
+                        rows="3" 
+                        required
+                        placeholder="Explique el motivo del rechazo..."
+                    ></textarea>
+                    <small class="text-muted">{{ __("Este mensaje será visible para el usuario") }}</small>
+                </div>
+
+                <style>
+                .required:after {
+                    content: ' *';
+                    color: red;
+                }
+                </style>
             </div>
 
             <div class="modal-footer justify-content-center">
@@ -146,9 +172,13 @@ var table = $('#geniustable').DataTable({
       });
     })
 
+    
 
 abstract
 </script>
+
+
+
 
 @endsection
 

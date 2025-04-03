@@ -3,65 +3,45 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable
 {
-    use Notifiable;
 
-    protected $fillable = ['bank_plan_id', 'account_number', 'name', 'photo', 'zip', 'residency', 'city', 'address', 'phone', 'fax', 'email', 'password', 'verification_link', 'affilate_code', 'is_provider', 'twofa', 'go', 'details', 'kyc_status', 'kyc_info', 'kyc_reject_reason', 'plan_end_date', 'currency_id'];
+   protected $fillable = ['bank_plan_id','account_number','name', 'photo', 'zip', 'residency', 'city', 'address', 'phone', 'fax', 'email','password','verification_link','affilate_code','is_provider','twofa','go','details','kyc_status','kyc_info','kyc_reject_reason','plan_end_date'];
 
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token'
     ];
 
     protected $dates = [
         'plan_end_date',
     ];
 
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
-
-    public function subscriptions()
-    {
+    public function subscriptions(){
         return $this->hasMany(UserSubscription::class);
     }
 
-    public function balanceTransfers()
-    {
+    public function balanceTransfers(){
         return $this->hasMany(BalanceTransfer::class);
     }
 
-    public function fdr()
-    {
+    public function fdr(){
         return $this->hasMany(UserFdr::class);
     }
 
-    public function dps()
-    {
+    public function dps(){
         return $this->hasMany(UserDps::class);
     }
 
-    public function loans()
-    {
+    public function loans(){
         return $this->hasMany(UserLoan::class);
     }
 
-    public function wiretransfers()
-    {
+    public function wiretransfers(){
         return $this->hasMany(WireTransfer::class);
     }
 
-    public function deposits()
-    {
+    public function deposits(){
         return $this->hasMany(Deposit::class);
     }
 
@@ -70,7 +50,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Withdraw::class);
     }
 
-    public function orders()
+	public function orders()
     {
         return $this->hasMany('App\Models\Order');
     }
@@ -86,6 +66,6 @@ class User extends Authenticatable implements JWTSubject
 
     public function transactions()
     {
-        return $this->hasMany('App\Models\Transaction', 'user_id');
+        return $this->hasMany('App\Models\Transaction','user_id');
     }
 }

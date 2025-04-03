@@ -3,8 +3,6 @@
     <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
     <input type="hidden" name="razorpay_signature"  id="razorpay_signature" >
 </form>
-
-
 <script>
 "use strict";
 var options = <?php echo $json;?>;

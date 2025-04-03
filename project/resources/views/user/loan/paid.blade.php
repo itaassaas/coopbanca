@@ -68,7 +68,7 @@
 
                                           <td data-label="{{ __('Next Installment') }}"> 
                                             <div>
-                                              {{ $data->next_installment ?  Carbon\Carbon::parse($data->next_installment)->toDateString() : '--'}}
+                                              {{ $data->next_installment ?  $data->next_installment->toDateString() : '--'}}
                                             </div>
                                           </td>
                                           <td data-label="{{ __('Status') }}">

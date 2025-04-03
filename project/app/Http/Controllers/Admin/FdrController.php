@@ -57,7 +57,7 @@ class FdrController extends Controller
 
                             ->editColumn('profit_amount', function(UserFdr $data) {
                                 $curr = Currency::where('is_default','=',1)->first();
-                                $nextProfitTime = $data->next_profit_time != NULL ? Carbon::parse($data->next_profit_time)->toDateString() : 'Closed FDR';
+                                $nextProfitTime = $data->next_profit_time != NULL ? $data->next_profit_time->toDateString() : 'Closed FDR';
                                 if($data->profit_type == 'partial'){
                                     return '<div>
                                             '.$curr->sign.$data->profit_amount.'

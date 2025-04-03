@@ -66,7 +66,7 @@ class DpsController extends Controller
                                 </div>';
                             })
                             ->editColumn('next_installment', function(UserDps $data){
-                                return $data->next_installment != NULL ? Carbon::parse($data->next_installment)->toDateString() : '--';
+                                return $data->next_installment != NULL ? $data->next_installment->toDateString() : '--';
                             })
                             ->addColumn('action', function(UserDps $data) {
 

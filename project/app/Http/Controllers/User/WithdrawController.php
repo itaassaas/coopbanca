@@ -15,6 +15,7 @@ use App\Models\WithdrawMethod;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Str;
 use Validator;
+use Illuminate\Support\Facades\Storage;
 
 class WithdrawController extends Controller
 {
@@ -41,7 +42,13 @@ class WithdrawController extends Controller
     {
         $request->validate([
             'amount' => 'required|gt:0',
+            'comporbante' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // Create storage directory if it doesn't exist
+        if (!Storage::disk('public')->exists('withdraws')) {
+            Storage::disk('public')->makeDirectory('withdraws');
+        }
 
         $user = auth()->user();
 
@@ -90,13 +97,55 @@ class WithdrawController extends Controller
             return redirect()->back()->with('unsuccess','Insufficient Balance.');
         }
 
+
+
         $finalamount = number_format((float)$finalamount,2,'.','');
 
         $user->balance = $user->balance - $amount;
         $user->update();
 
         $txnid = Str::random(12);
+
+
         $newwithdraw = new Withdraw();
+
+
+
+        if ($request->hasFile('comporbante')) {
+            try {
+                $image = $request->file('comporbante');
+                $fileName = time() . '_' . $txnid . '.' . $image->getClientOriginalExtension();
+                
+                // Asegurar que el directorio existe
+                $path = public_path('assets/images');
+                if (!file_exists($path)) {
+                    mkdir($path, 0775, true);
+                }
+                
+                // Verificar permisos del directorio
+                if (!is_writable($path)) {
+                    throw new \Exception('Directory is not writable');
+                }
+                
+                // Mover el archivo con verificación
+                if (!$image->move($path, $fileName)) {
+                    throw new \Exception('Failed to move uploaded file');
+                }
+                
+                // Verificar que el archivo existe después de moverlo
+                if (!file_exists($path . '/' . $fileName)) {
+                    throw new \Exception('File was not saved correctly');
+                }
+                
+                $newwithdraw->comporbante = 'assets/images/' . $fileName;
+                
+            } catch (\Exception $e) {
+                \Log::error('Error uploading file: ' . $e->getMessage());
+                return redirect()->back()
+                    ->with('error', 'Error al cargar la imagen: ' . $e->getMessage());
+            }
+        }
+
         $newwithdraw['user_id'] = auth()->id();
         $newwithdraw['method'] = $request->methods;
         $newwithdraw['txnid'] = $txnid;

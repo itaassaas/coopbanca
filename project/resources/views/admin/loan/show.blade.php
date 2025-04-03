@@ -24,28 +24,31 @@
                         </h4>
                     </div>
                     <div class="table-responsive-sm">
-                        <table class="table">
-                            <tbody>
-
-                                @foreach ($requiredInformations as $key=>$value)
-                                    @if ($value[1] == 'file')
-                                    <tr>
-                                        <th width="45%">{{$key}}</th>
-                                        <td width="10%">:</td>
-                                        <td width="45%"><a href="{{asset('assets/images/'.$value[0])}}" download><img src="{{asset('assets/images/'.$value[0])}}" class="img-thumbnail"></a></td>
-                                    </tr>
-                                    @else 
-                                        <tr>
-                                            <th width="45%">{{$key}}</th>
-                                            <td width="10%">:</td>
-                                            <td width="45%">{{ $value[0] }}</td>
-                                        </tr>
-                                    @endif
-                                @endforeach
-
-
-                            </tbody>
-                        </table>
+                    <table class="table">
+        <tbody>
+            @if(!empty($requiredInformations))
+                @foreach ($requiredInformations as $key=>$value)
+                    @if ($value[1] == 'file')
+                    <tr>
+                        <th width="45%">{{$key}}</th>
+                        <td width="10%">:</td>
+                        <td width="45%"><a href="{{asset('assets/images/'.$value[0])}}" download><img src="{{asset('assets/images/'.$value[0])}}" class="img-thumbnail"></a></td>
+                    </tr>
+                    @else 
+                        <tr>
+                            <th width="45%">{{$key}}</th>
+                            <td width="10%">:</td>
+                            <td width="45%">{{ $value[0] }}</td>
+                        </tr>
+                    @endif
+                @endforeach
+            @else
+                <tr>
+                    <td colspan="3" class="text-center">No hay información requerida disponible</td>
+                </tr>
+            @endif
+        </tbody>
+    </table>
                     </div>
                     <div class="footer-area">
                         @if ($data->status == 0)

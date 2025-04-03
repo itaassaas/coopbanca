@@ -17,6 +17,8 @@ use App\Models\Wishlist;
 use App\Models\Withdraw;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Models\Transaction; // Agregar esta línea
+
 
 class UserController extends Controller
 {
@@ -131,18 +133,158 @@ class UserController extends Controller
             return response()->json($msg);
         }
 
+
+        private function generateUniqueTransactionId() {
+            return 'TXN' . time() . rand(1000, 9999);
+        }
+        
+        public function createTransactionFromAdmin($user, $amount) {
+            $trans = new Transaction();
+            $trans->email = $user->email;
+            $trans->amount = $amount;
+            $trans->type = "Deposit";
+            $trans->profit = "plus";
+            $trans->txnid = $this->generateUniqueTransactionId();
+            $trans->user_id = $user->id;
+            $trans->save();
+
+
+            
+            return $trans;
+        }
+
+        //función formatPhoneNumber
+
+        private function formatPhoneNumber($phone) 
+        {
+            // Eliminar caracteres no numéricos
+            $phone = preg_replace('/[^0-9]/', '', $phone);
+            
+            // Asegurarse que tenga el código de país
+            if (!str_starts_with($phone, '52')) {
+                $phone = '52' . $phone;
+            }
+            
+            return $phone;
+        }
+
+
+        //función sendVonageSMS
+        private function sendVonageSMS($to, $message) 
+        {
+            // Debug logging inicial
+            \Log::info("Iniciando envío de SMS", ['to' => $to]);
+
+            // Obtener credenciales usando config()
+            $apiKey = config('services.vonage.key');
+            $apiSecret = config('services.vonage.secret');
+            $brandName = config('services.vonage.sms_from');
+
+            // Formatear número de teléfono
+            $to = $this->formatPhoneNumber($to);
+            
+            // URL de la API de Vonage
+            $url = 'https://rest.nexmo.com/sms/json';
+            
+            // Preparar datos para la petición
+            $data = [
+                'api_key' => $apiKey,
+                'api_secret' => $apiSecret,
+                'to' => $to,
+                'from' => $brandName,
+                'text' => $message,
+                'type' => 'text'  // Cambiado de 'unicode' a 'text'
+            ];
+
+            // Configurar y ejecutar cURL
+            $ch = curl_init();
+            curl_setopt_array($ch, [
+                CURLOPT_URL => $url,
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => http_build_query($data),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_HTTPHEADER => [
+                    'Content-Type: application/x-www-form-urlencoded'
+                ]
+            ]);
+
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+            
+            curl_close($ch);
+
+            if ($error) {
+                \Log::error("Error cURL en Vonage SMS", ['error' => $error]);
+                return false;
+            }
+
+            $result = json_decode($response, true);
+
+            // Solo registrar una vez la respuesta
+            \Log::info("Respuesta Vonage", ['response' => $result]);
+
+            // Verificar si al menos un mensaje se envió correctamente
+            if (isset($result['messages']) && is_array($result['messages'])) {
+                foreach ($result['messages'] as $message) {
+                    if ($message['status'] == '0') {
+                        return true; // Éxito si al menos un mensaje se envió
+                    }
+                }
+            }
+
+            return false;
+        }
+
+
+
         public function adddeduct(Request $request){
             $user = User::whereId($request->user_id)->first();
             if($user){
+                // Eliminar la condición duplicada
                 if($request->type == 'add'){
+                    // Crear registro de transacción
+                    $this->createTransactionFromAdmin($user, $request->amount);
+        
                     $user->increment('balance',$request->amount);
-                    return redirect()->back()->with('message','User balance added');
-                }else{
-                    if($user->balance>=$request->amount){
+                    $depositTransaction = $user->deposits()->create([
+                        'amount' => $request->amount,
+                        'method' => 'Admin Added',
+                        'txnid' => $this->generateUniqueTransactionId(),
+                        'status' => 'complete',
+                        'charge' => 0,
+                        'final_amo' => $request->amount,
+                        'message' => 'Admin Added',
+                        'user_id' => $user->id
+                    ]);
+        
+                    // Enviar SMS solo si el depósito se creó correctamente
+                    if ($depositTransaction && !empty($user->phone)) {
+                        try {
+                            $mensaje = "Hola " . $user->name . ",\n\n" .
+          "Su cuenta ha sido recargada con $" . number_format($request->amount, 2) . 
+          ".\nSu nuevo balance es: $" . number_format($user->balance, 2) . 
+          ".\n\nPuedes verificar tu saldo en:\nhttps://sucursalpersonacoopbanc.cloud/user/login";
+                            
+                            $smsResult = $this->sendVonageSMS($user->phone, $mensaje);
+                            if (!$smsResult) {
+                                \Log::warning('No se pudo enviar el SMS', [
+                                    'user_id' => $user->id,
+                                    'phone' => $user->phone
+                                ]);
+                            }
+                        } catch (\Exception $e) {
+                            \Log::error('Error al enviar SMS: ' . $e->getMessage());
+                        }
+                    }
+        
+                    return redirect()->back()->with('message','Saldo del usuario agregado');
+                } else {
+                    if($user->balance >= $request->amount){
                         $user->decrement('balance',$request->amount);
-                        return redirect()->back()->with('message','User balance deduct!');
-                    }else{
-                        return redirect()->back()->with('warning','User don,t have sufficient balance!');
+                        return redirect()->back()->with('message','¡Saldo del usuario deducido!');
+                    } else {
+                        return redirect()->back()->with('warning','¡El usuario no tiene saldo suficiente!');
                     }
                 }
             }else{
@@ -232,6 +374,7 @@ class UserController extends Controller
         $account->balance = $account->balance + $withdraw->amount + $withdraw->fee;
         $account->update();
         $data['status'] = "rejected";
+        $data['motivo_rechazo'] = "su retiro fue rechazado por el administrador";
         $withdraw->update($data);
 
         $msg = __('Withdraw Rejected Successfully.');
@@ -303,6 +446,15 @@ class UserController extends Controller
                 
                 $msg = 'Data Deleted Successfully.';
                 return response()->json($msg);       
-        }
+    }
+
+    public function updateCreditStatus(Request $request)
+    {
+        $user = User::findOrFail($request->user_id);
+        $user->estado_credito = $request->estado_credito;
+        $user->save();
+        
+        return response()->json(['success' => true]);
+    }
 
 }

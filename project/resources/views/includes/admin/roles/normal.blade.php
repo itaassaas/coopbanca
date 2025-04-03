@@ -8,6 +8,14 @@
   </li>
   @endif
 
+
+  
+    @php
+      $sectionChecked = Auth::guard('admin')->user()->sectionCheck('Manage Customers');
+      \Log::info('Section "Manage Customers" checked: ' . ($sectionChecked ? 'Yes' : 'No'));
+    @endphp
+
+
   @if(Auth::guard('admin')->user()->sectionCheck('Manage Customers'))
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#customer" aria-expanded="true"
