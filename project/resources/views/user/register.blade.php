@@ -62,7 +62,7 @@
                         </button>
                         <div class="text-end">
                             <a href="{{ route('user.login')}}" class="text--base">@lang('Already have
-                                an account ')?</a>
+                                an account')?</a>
                         </div>
                     </div>
                     <div class="mt-2">
