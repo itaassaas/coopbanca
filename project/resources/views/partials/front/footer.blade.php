@@ -7,7 +7,7 @@
                         <img src="{{ asset('assets/images/'.$gs->footer_logo) }}" alt="logo">
                     </a>
                 </div>
-                <div class="footer-logo">
+                <!-- <div class="footer-logo">
                 <h5 class="title">con el apoyo de:</h5>
                     <a href="index.html">
                         <img src= "https://popularenlinea.com/_catalogs/masterpage/popularenlinea/shared/images/BPD-logo.png" alt="logo">
@@ -25,7 +25,7 @@
                         <img src= "https://plazareal.co.cr/wp-content/uploads/2015/11/Logos-PR-BCR.png" alt="logo">
                     </a>
                     
-                </div>
+                </div> -->
                 <div class="footer-links">
                     <h5 class="title">@lang('About')</h5>
                     <ul>
