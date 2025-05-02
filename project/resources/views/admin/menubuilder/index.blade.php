@@ -23,7 +23,7 @@
                   <ul class="list-group">
                      <li class="list-group-item d-flex justify-content-between">
                         <span class="menu-items">{{ __('Inicio') }}</span>
-                        <a data-title="{{ __('Home') }}" data-dropdown="no" data-href="/" data-target="self" class="btn btn-primary btn-sm btn-rounded addToMenu" href="javascript:;">{{ __('Add To Menu') }}</a>
+                        <a data-title="{{ __('Inicio') }}" data-dropdown="no" data-href="/" data-target="self" class="btn btn-primary btn-sm btn-rounded addToMenu" href="javascript:;">{{ __('Add To Menu') }}</a>
                      </li>
 
                      <li class="list-group-item d-flex justify-content-between">
