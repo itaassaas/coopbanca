@@ -61,8 +61,7 @@
                             @lang('Register Now')
                         </button>
                         <div class="text-end">
-                            <a href="{{ route('user.login')}}" class="text--base">@lang('Already have
-                                an account')?</a>
+                            <a href="{{ route('user.login')}}" class="text--base">@lang('Ya tienes unas cuenta')?</a>
                         </div>
                     </div>
                     <div class="mt-2">
