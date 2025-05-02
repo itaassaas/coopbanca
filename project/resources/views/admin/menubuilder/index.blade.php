@@ -27,13 +27,13 @@
                      </li>
 
                      <li class="list-group-item d-flex justify-content-between">
-                        <span class="menu-items">{{ __('Services') }}</span>
-                        <a data-title="{{ __('Services') }}" data-dropdown="no" data-href="/services" data-target="self" class="btn btn-primary btn-sm btn-rounded addToMenu" href="javascript:;">{{ __('Add To Menu') }}</a>
+                        <span class="menu-items">{{ __('Servicios') }}</span>
+                        <a data-title="{{ __('Servicios') }}" data-dropdown="no" data-href="/services" data-target="self" class="btn btn-primary btn-sm btn-rounded addToMenu" href="javascript:;">{{ __('Add To Menu') }}</a>
                      </li>
 
                      <li class="list-group-item d-flex justify-content-between">
-                        <span class="menu-items">{{ __('About') }}</span>
-                        <a data-title="{{ __('About') }}" data-dropdown="no" data-href="/about" data-target="self" class="btn btn-primary btn-sm btn-rounded addToMenu" href="javascript:;">{{ __('Add To Menu') }}</a>
+                        <span class="menu-items">{{ __('Quienes somos') }}</span>
+                        <a data-title="{{ __('Quienes somos') }}" data-dropdown="no" data-href="/about" data-target="self" class="btn btn-primary btn-sm btn-rounded addToMenu" href="javascript:;">{{ __('Add To Menu') }}</a>
                      </li>
 
                      <li class="list-group-item d-flex justify-content-between">
