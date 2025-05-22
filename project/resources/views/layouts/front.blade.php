@@ -14,7 +14,7 @@
         <meta name="description" content="{{ $blog->meta_description }}"> 
     @else
         <meta name="keywords" content="{{ $seo->meta_keys }}">
-        <meta name="author" content="GeniusOcean">
+        <meta name="author" content="">
     @endif
     <title>{{$gs->title}}</title>
 
